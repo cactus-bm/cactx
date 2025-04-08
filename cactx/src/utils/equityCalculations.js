@@ -28,12 +28,10 @@ export const calculateSplit = (investors, valuation) => {
   const remainingEquity = 1 - safeTotalPercentage;
   
   // Calculate equity investors' adjusted percentages
-  const equityTotal = (investors.equity || []).reduce((sum, investor) => sum + investor.percentage, 0);
-  
   const equityInvestors = (investors.equity || []).map(investor => ({
     name: investor.name,
     type: 'equity',
-    percentage: remainingEquity * (investor.percentage / equityTotal)
+    percentage: remainingEquity * investor.percentage
   }));
   
   // Employee allocation gets what's left after equity and SAFE

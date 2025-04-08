@@ -68,13 +68,15 @@ describe('Equity Calculations', () => {
         // No safe or employee investors
       }, 10000000);
       
-      expect(result).toHaveLength(2); // Only equity investors
+      expect(result).toHaveLength(3); // Only equity investors
       
       // Total should be 0.7 + 0.2 = 0.9, normalized to 1.0
       const founder = result.find(i => i.name === 'Founder');
-      expect(founder.percentage).toBeCloseTo(0.7/0.9, 5);
+      expect(founder.percentage).toBeCloseTo(0.7, 5);
       const angel = result.find(i => i.name === 'Angel');
-      expect(angel.percentage).toBeCloseTo(0.2/0.9, 5);
+      expect(angel.percentage).toBeCloseTo(0.2, 5);
+      const residue = result.find(i => i.name === 'Residue');
+      expect(residue.percentage).toBeCloseTo(0.1, 5);
     });
   });
 
