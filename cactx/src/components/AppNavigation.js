@@ -100,7 +100,7 @@ const AppNavigation = () => {
                     <BusinessIcon />
                   </ListItemIcon>
                   <ListItemText 
-                    primary={scenario.name} 
+                    primary={scenario.basicInfo.name} 
                     secondary={`Created: ${new Date(scenario.createdAt).toLocaleDateString()}`} 
                   />
                 </ListItemButton>
