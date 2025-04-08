@@ -29,7 +29,7 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
 export const calculateValuation = (combinedFinancials, {valuation, ownership}) => {
   const valuations = {}
 
-  if (scenario.valuation.catx > 0 || scenario.valuation.cactus > 0) {
+  if (valuation.catx > 0 || valuation.cactus > 0) {
     const valuationSource = valuation.catx > 0 ? 'catx' : 'cactus';
 
     valuations.merger = {
