@@ -122,7 +122,7 @@ const ScenarioResults = ({ scenario, companies }) => {
                 borderRadius: 1,
                 overflow: 'hidden'
               }}>
-                <Box 
+                {scenario.ownership.catx > 0 && <Box 
                   sx={{
                     backgroundColor: 'secondary.light',
                     width: `${scenario.ownership.catx}%`,
@@ -130,11 +130,11 @@ const ScenarioResults = ({ scenario, companies }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
-                    minWidth: scenario.ownership.catx > 0 ? '40px' : '0px'
+                    minWidth: '40px'
                   }}>
                   {scenario.ownership.catx}%
-                </Box>
-                <Box 
+                </Box>}
+                {scenario.ownership.cactus > 0 && <Box 
                   sx={{
                     backgroundColor: 'primary.light',
                     width: `${scenario.ownership.cactus}%`,
@@ -142,11 +142,11 @@ const ScenarioResults = ({ scenario, companies }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
-                    minWidth: scenario.ownership.cactus > 0 ? '40px' : '0px'
+                    minWidth: '40px'
                   }}>
                   {scenario.ownership.cactus}%
-                </Box>
-                <Box 
+                </Box>}
+                {scenario.ownership.ben > 0 && <Box 
                   sx={{
                     backgroundColor: 'warning.light',
                     width: `${scenario.ownership.ben}%`,
@@ -154,10 +154,10 @@ const ScenarioResults = ({ scenario, companies }) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 'bold',
-                    minWidth: scenario.ownership.ben > 0 ? '40px' : '0px'
+                    minWidth: '40px'
                   }}>
                   {scenario.ownership.ben}%
-                </Box>
+                </Box>}
               </Box>
             </Box>
           </Paper>
