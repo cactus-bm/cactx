@@ -40,17 +40,8 @@ const initialState = {
         employees: [
           {
             name: 'Option Pool',
-            percentage: 0.10,  // 10% reserved for employees
-            allocated: 0.04   // 4% already allocated
+            allocated: 75   // 75 RSUs
           },
-          {
-            name: 'John Smith (CTO)',
-            percentage: 0.02  // 2% ownership
-          },
-          {
-            name: 'Alice Johnson (VP Engineering)',
-            percentage: 0.02  // 2% ownership
-          }
         ]
       }
     },
@@ -88,16 +79,7 @@ const initialState = {
         employees: [
           {
             name: 'Option Pool',
-            percentage: 0.10,  // 10% reserved for employees
-            allocated: 0.04   // 4% already allocated
-          },
-          {
-            name: 'John Smith (CTO)',
-            percentage: 0.02  // 2% ownership
-          },
-          {
-            name: 'Alice Johnson (VP Engineering)',
-            percentage: 0.02  // 2% ownership
+            allocated: 75   // 75 RSUs
           }
         ]
       }

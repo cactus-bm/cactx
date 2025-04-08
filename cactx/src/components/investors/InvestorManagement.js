@@ -371,7 +371,7 @@ const InvestorManagement = ({ companyId }) => {
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">
-                        {formatPercentage(investor.allocated)}
+                        {investor.allocated}
                       </TableCell>
                       <TableCell align="right">{formatPercentage(investor.allocated / totalEmployeeAllocated * totalEmployeePercentage)}</TableCell>
                       <TableCell align="right">
