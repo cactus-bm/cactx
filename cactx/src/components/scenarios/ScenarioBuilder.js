@@ -60,7 +60,8 @@ const ScenarioBuilder = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [scenarioData, setScenarioData] = useState({
     id: crypto.randomUUID(),
-    basicInfo: {
+
+      basicInfo: {
       name: '',
       description: '',
     },
