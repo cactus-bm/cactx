@@ -50,9 +50,9 @@ const ValuationAssumptions = ({ data, onChange }) => {
   // Get description text based on which valuation is set
   const getDescriptionText = () => {
     if (data.catxValuation > 0) {
-      return "CatX's valuation is set manually. The Cactus valuation will be calculated based on ownership percentages and financial data.";
+      return "CatX's valuation is set manually. The Cactus valuation will be calculated based on ownership percentages.";
     } else if (data.cactusValuation > 0) {
-      return "Cactus's valuation is set manually. The CatX valuation will be calculated based on ownership percentages and financial data.";
+      return "Cactus's valuation is set manually. The CatX valuation will be calculated based on ownership percentages.";
     } else {
       return "Enter a valuation for either company. The valuation of the other company will be calculated automatically.";
     }
