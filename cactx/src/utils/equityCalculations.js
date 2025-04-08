@@ -18,34 +18,37 @@ export const calculateSplit = (investors, valuation) => {
     throw new Error('Invalid inputs: investors and valuation (> 0) are required');
   }
   
-  // Initialize result array to store all investors
-  const result = [];
-  
-  // Calculate total SAFE investment and convert to equity
+  // Calculate SAFE investments' equity percentages
   const safeInvestors = convertSafeToEquity(investors.safe || [], valuation);
   
-  // Calculate total employee options allocation
-  const employeeInvestors = convertEmployeesToEquity(investors.employees || []);
+  // Calculate total SAFE ownership
+  const safeTotalPercentage = safeInvestors.reduce((sum, investor) => sum + investor.percentage, 0);
   
-  // Get direct equity investors
+  // Calculate remaining equity (after SAFE conversion)
+  const remainingEquity = 1 - safeTotalPercentage;
+  
+  // Calculate equity investors' adjusted percentages
+  const equityTotal = (investors.equity || []).reduce((sum, investor) => sum + investor.percentage, 0);
+  
   const equityInvestors = (investors.equity || []).map(investor => ({
     name: investor.name,
     type: 'equity',
-    percentage: investor.percentage
+    percentage: remainingEquity * (investor.percentage / equityTotal)
   }));
   
-  // Combine all investor types
-  const allInvestors = [...equityInvestors, ...safeInvestors, ...employeeInvestors];
+  // Employee allocation gets what's left after equity and SAFE
+  const equityUsed = equityInvestors.reduce((sum, investor) => sum + investor.percentage, 0);
+  const employeePercentage = remainingEquity - equityUsed;
   
-  // Calculate total equity before normalization
-  const totalEquity = allInvestors.reduce((sum, investor) => sum + investor.percentage, 0);
+  // Convert employee allocations
+  const employeeInvestors = convertEmployeesToEquity(investors.employees || [], employeePercentage);
   
-  // Normalize percentages to ensure they sum to 1.0 (100%)
-  return allInvestors.map(investor => ({
-    name: investor.name,
-    type: investor.type,
-    percentage: totalEquity > 0 ? investor.percentage / totalEquity : 0
-  }));
+  // Combine all investor types into a single result array
+  return [
+    ...equityInvestors,
+    ...safeInvestors,
+    ...employeeInvestors
+  ];
 };
 
 /**
@@ -57,7 +60,8 @@ export const calculateSplit = (investors, valuation) => {
  */
 export const convertSafeToEquity = (safeInvestors, valuation) => {
   return safeInvestors.map(investor => {
-    const effectiveValuation = investor.cap && investor.cap < valuation 
+    // If cap is undefined or 0, use valuation
+    const effectiveValuation = investor.cap && investor.cap > 0 && investor.cap < valuation 
       ? investor.cap  // Use cap if it's lower than valuation
       : valuation;
     
@@ -78,16 +82,25 @@ export const convertSafeToEquity = (safeInvestors, valuation) => {
  * Convert employee allocations to equity percentages
  * 
  * @param {Array} employeeInvestors - Array of employee investors
- * @returns {Array} Employee investors converted to equity percentages
+ * @param {number} availablePercentage - The percentage available for employee allocation
+ * @returns {Array|Object} Employee investors converted to equity percentages or residue object
  */
-export const convertEmployeesToEquity = (employeeInvestors) => {
+export const convertEmployeesToEquity = (employeeInvestors, availablePercentage) => {
+  if (availablePercentage <= 1e-9) {
+    return []
+  }
+  // If no employees, return the residue
+  if (!employeeInvestors || employeeInvestors.length === 0) {
+    return [{ name: "Residue", percentage: availablePercentage }];
+  }
+  
   // Calculate total allocation
   const totalAllocated = employeeInvestors.reduce((sum, investor) => sum + investor.allocated, 0);
   
   // Convert each allocation to a percentage
   return employeeInvestors.map(investor => {
-    // If no allocations, return 0 percentage
-    const percentage = totalAllocated > 0 ? investor.allocated / totalAllocated * 0.10 : 0; // Assume 10% for employee pool
+    // Distribute the available percentage based on allocation ratio
+    const percentage = totalAllocated > 0 ? (investor.allocated / totalAllocated) * availablePercentage : 0;
     
     return {
       name: investor.name,

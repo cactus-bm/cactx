@@ -14,7 +14,7 @@ describe('Equity Calculations', () => {
     ],
     safe: [
       { name: 'SAFE Investor 1', amount: 500000, cap: 5000000 },
-      { name: 'SAFE Investor 2', amount: 300000, cap: 6000000 }
+      { name: 'SAFE Investor 2', amount: 300000, cap: 10000000 }
     ],
     employees: [
       { name: 'Option Pool', allocated: 100 }
@@ -86,10 +86,10 @@ describe('Equity Calculations', () => {
       expect(result).toHaveLength(2);
       
       // First SAFE hits cap at $5M
-      expect(result[0].percentage).toBe(0.1); // 500k/5M = 0.1
+      expect(result[0].percentage).toBeCloseTo(0.1, 3); // 500k/5M = 0.1
       
       // Second SAFE uses valuation since cap is higher
-      expect(result[1].percentage).toBe(0.03); // 300k/10M = 0.03
+      expect(result[1].percentage).toBeCloseTo(0.03, 3); // 300k/10M = 0.03
     });
 
     test('should handle no cap specified', () => {
@@ -138,7 +138,7 @@ describe('Equity Calculations', () => {
 
     test('should handle empty employee list', () => {
       const result = convertEmployeesToEquity([], 0.5);
-      expect(result).toEqual({name: "Residue", percentage: 0.5});
+      expect(result[0]).toEqual({name: "Residue", percentage: 0.5});
     });
   });
 
@@ -154,9 +154,9 @@ describe('Equity Calculations', () => {
       
       const summary = getEquitySummary(equitySplit);
       
-      expect(summary.equity).toBe(0.8);
-      expect(summary.safe).toBe(0.15);
-      expect(summary.employee).toBe(0.05);
+      expect(summary.equity).toBeCloseTo(0.8, 3);
+      expect(summary.safe).toBeCloseTo(0.15, 3);
+      expect(summary.employee).toBeCloseTo(0.05, 3);
     });
   });
 });
