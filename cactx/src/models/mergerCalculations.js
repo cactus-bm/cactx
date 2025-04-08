@@ -78,17 +78,31 @@ export const calculateValuation = (combinedFinancials, scenario) => {
   // Check if a custom valuation was provided
   if (scenario.catxValuation > 0 || scenario.cactusValuation > 0) {
     const customValue = scenario.catxValuation || scenario.cactusValuation;
+    const valuationSource = scenario.catxValuation > 0 ? 'catx' : 'cactus';
     
-    // If we have a custom valuation, use that directly
+    // Calculate standard values for comparison
+    const standardArrBasedValue = combinedFinancials.arr * 5; // Standard 5x multiple
+    const standardProfitBasedValue = combinedFinancials.profit * 12; // Standard 12x multiple
+    const standardCashBasedValue = combinedFinancials.cashOnHand;
+    
+    // Calculate standard weighted value
+    const standardWeightedValue = (
+      (standardArrBasedValue * 0.6) + 
+      (standardProfitBasedValue * 0.3) + 
+      (standardCashBasedValue * 0.1)
+    );
+    
+    // Return both the custom valuation and standard calculations for reference
     return {
-      totalValue: customValue,
+      weightedValue: customValue, // Use the custom value as the main valuation
+      arrBasedValue: standardArrBasedValue,
+      profitBasedValue: standardProfitBasedValue,
+      cashBasedValue: standardCashBasedValue,
+      standardWeightedValue: standardWeightedValue,
       arrMultiple: (customValue / combinedFinancials.arr).toFixed(1),
       profitMultiple: (customValue / combinedFinancials.profit).toFixed(1),
-      valuationMethod: scenario.catxValuation > 0 ? 'CatX Fixed Valuation' : 'Cactus Fixed Valuation',
-      // Include the original values for reference
-      arrBasedValue: combinedFinancials.arr * 5, // Using standard 5x multiple
-      profitBasedValue: combinedFinancials.profit * 12, // Using standard 12x multiple
-      cashBasedValue: combinedFinancials.cashOnHand
+      valuationSource: valuationSource,
+      isCustomValuation: true
     };
   }
   
@@ -111,10 +125,12 @@ export const calculateValuation = (combinedFinancials, scenario) => {
   );
   
   return {
+    weightedValue,
     arrBasedValue,
     profitBasedValue,
     cashBasedValue,
-    weightedValue
+    isCustomValuation: false,
+    valuationSource: 'calculated'
   };
 };
 

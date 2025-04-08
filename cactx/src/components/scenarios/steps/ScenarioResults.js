@@ -57,19 +57,136 @@ const ScenarioResults = ({ scenario, companies }) => {
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
-              Valuation
+              Merger Valuation
             </Typography>
             <Divider sx={{ my: 2 }} />
             
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" color="text.secondary">
-                Weighted Valuation
+                {results.valuation.isCustomValuation 
+                  ? `${results.valuation.valuationSource === 'catx' ? 'CatX' : 'Cactus'} Fixed Valuation` 
+                  : 'Calculated Valuation'}
               </Typography>
               <Typography variant="h4">
                 {formatCurrency(results.valuation.weightedValue)}
               </Typography>
+              {results.valuation.isCustomValuation && (
+                <Typography variant="body2" color="text.secondary">
+                  Using fixed valuation from {results.valuation.valuationSource === 'catx' ? 'CatX' : 'Cactus'}
+                </Typography>
+              )}
             </Box>
             
+            <Divider sx={{ my: 2 }} />
+            
+            <Typography variant="subtitle2" gutterBottom>
+              Valuation Metrics
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="body2" color="text.secondary">
+                  ARR Multiple
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {results.valuation.arrMultiple}x
+                </Typography>
+              </Grid>
+              
+              <Grid item xs={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Profit Multiple
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {results.valuation.profitMultiple}x
+                </Typography>
+              </Grid>
+            </Grid>
+            
+          </Paper>
+        </Grid>
+        
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Ownership Structure
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <Typography variant="subtitle2" color="text.secondary">
+                  CatX
+                </Typography>
+                <Typography variant="h5" color="secondary.main">
+                  {scenario.ownership.catx}%
+                </Typography>
+              </Grid>
+              
+              <Grid item xs={4}>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Cactus
+                </Typography>
+                <Typography variant="h5" color="primary.main">
+                  {scenario.ownership.cactus}%
+                </Typography>
+              </Grid>
+              
+              <Grid item xs={4}>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Ben Earnout
+                </Typography>
+                <Typography variant="h5" color="warning.main">
+                  {scenario.ownership.ben}%
+                </Typography>
+              </Grid>
+            </Grid>
+            
+            <Box sx={{ mt: 3, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
+              <Box sx={{ 
+                height: 30, 
+                display: 'flex', 
+                width: '100%', 
+                borderRadius: 1,
+                overflow: 'hidden'
+              }}>
+                <Box 
+                  sx={{
+                    backgroundColor: 'secondary.light',
+                    width: `${scenario.ownership.catx}%`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    minWidth: scenario.ownership.catx > 0 ? '40px' : '0px'
+                  }}>
+                  {scenario.ownership.catx}%
+                </Box>
+                <Box 
+                  sx={{
+                    backgroundColor: 'primary.light',
+                    width: `${scenario.ownership.cactus}%`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    minWidth: scenario.ownership.cactus > 0 ? '40px' : '0px'
+                  }}>
+                  {scenario.ownership.cactus}%
+                </Box>
+                <Box 
+                  sx={{
+                    backgroundColor: 'warning.light',
+                    width: `${scenario.ownership.ben}%`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    minWidth: scenario.ownership.ben > 0 ? '40px' : '0px'
+                  }}>
+                  {scenario.ownership.ben}%
+                </Box>
+              </Box>
+            </Box>
           </Paper>
         </Grid>
       </Grid>
