@@ -41,7 +41,7 @@ const formatCurrency = (value) => {
 
 // Format percentage values
 const formatPercentage = (value) => {
-  return `${(value * 100).toFixed(1)}%`;
+  return `${(value * 100).toFixed(2)}%`;
 };
 
 const InvestorManagement = ({ companyId }) => {
@@ -99,7 +99,7 @@ const InvestorManagement = ({ companyId }) => {
     if (name === 'percentage') {
       // Convert percentage to decimal (0-1)
       processedValue = parseFloat(value) / 100;
-    } else if (name === 'amount' || name === 'cap') {
+    } else if (name === 'amount' || name === 'cap' || name === 'allocated') {
       // Convert to number
       processedValue = parseFloat(value);
     }
@@ -397,7 +397,11 @@ const InvestorManagement = ({ companyId }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {company?.investors?.employees?.map((investor) => (
+                  {company?.investors?.employees?.map((investor) => {
+                    console.log(investor)
+                    console.log("allocated", totalEmployeeAllocated)
+                    console.log("percentage", totalEmployeePercentage)
+                    return(
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">
@@ -422,7 +426,7 @@ const InvestorManagement = ({ companyId }) => {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  ))}
+)})}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -440,8 +444,16 @@ const InvestorManagement = ({ companyId }) => {
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle>
           {currentInvestor 
-            ? `Edit ${investorType === 'equity' ? 'Equity' : 'SAFE'} Investor` 
-            : `Add New ${investorType === 'equity' ? 'Equity' : 'SAFE'} Investor`}
+            ? `Edit ${(() => {
+              if (investorType === 'equity') return 'Equity';
+              if (investorType === 'safe') return 'SAFE';
+              return 'Employee';
+            })()}` 
+            : `Add New ${(() => {
+              if (investorType === 'equity') return 'Equity';
+              if (investorType === 'safe') return 'SAFE';
+              return 'Employee';
+            })()}`}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
@@ -472,30 +484,25 @@ const InvestorManagement = ({ companyId }) => {
                 />
               </Grid>
 
-              {investorType === 'employees' && formData.name === 'Option Pool' && (
+              {investorType === 'employees' && (
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Allocated Percentage"
+                    label="Allocated Units"
                     name="allocated"
                     type="number"
-                    InputProps={{
-                      endAdornment: '%'
-                    }}
-                    value={formData.allocated * 100}
+                    value={formData.allocated}
                     onChange={handleInputChange}
                     required
                     inputProps={{ 
                       min: 0, 
-                      max: formData.percentage * 100, 
-                      step: 0.1 
                     }}
-                    helperText={`Amount already allocated from the option pool (must be <= ${(formData.percentage * 100).toFixed(1)}%)`}
+                    helperText={`This is a relative allocation.`}
                   />
                 </Grid>
               )}
               
-              {['equity', 'employees'].includes(investorType) ? (
+              {investorType === 'equity' && (
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -515,8 +522,9 @@ const InvestorManagement = ({ companyId }) => {
                     }}
                   />
                 </Grid>
-              ) : (
-                investorType === 'safe' && (
+              )} 
+
+              {investorType === 'safe' && (
                   <>
                     <Grid item xs={12}>
                       <TextField
@@ -545,8 +553,8 @@ const InvestorManagement = ({ companyId }) => {
                       />
                     </Grid>
                   </>
-                )
-              )}
+                )   
+}
             </Grid>
           </Box>
         </DialogContent>
