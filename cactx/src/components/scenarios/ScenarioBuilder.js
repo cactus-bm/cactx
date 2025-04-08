@@ -36,9 +36,7 @@ import ScenarioResults from './steps/ScenarioResults';
 
 import { 
   calculateCombinedFinancials, 
-  calculateOperationalMetrics,
-  calculateValuation,
-  createProjections
+  calculateValuation 
 } from '../../models/mergerCalculations';
 
 const steps = [
@@ -72,9 +70,8 @@ const ScenarioBuilder = () => {
     },
     valuationAssumptions: {
       catxValuation: 0,
-      cactusValuation: 0
+      cactusValuation: 25e6
     },
-    // Removed operational assumptions
     results: null
   });
   
@@ -107,12 +104,6 @@ const ScenarioBuilder = () => {
           {} // Using default values in the calculation function
         );
         
-        const operationalMetrics = calculateOperationalMetrics(
-          catx,
-          cactus,
-          {} // Using default values in the calculation function
-        );
-        
         // Use valuation from user input if available
         const valuation = calculateValuation(
           combinedFinancials,
@@ -125,24 +116,12 @@ const ScenarioBuilder = () => {
           }
         );
         
-        const projections = createProjections(
-          combinedFinancials,
-          {
-            // Use fixed growth rates for projections since we removed financial assumptions
-            annualRevenueGrowth: 5,
-            annualExpenseGrowth: 3
-          },
-          5
-        );
-        
         // Update scenario data with results
         setScenarioData(prev => ({
           ...prev,
           results: {
             combinedFinancials,
-            operationalMetrics,
             valuation,
-            projections
           }
         }));
       }

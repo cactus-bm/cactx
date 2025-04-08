@@ -26,11 +26,12 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
  * @param {Object} scenario - Merger scenario configuration
  * @returns {Object} Valuation metrics
  */
-export const calculateValuation = (combinedFinancials, {valuation, ownership}) => {
+export const calculateValuation = (combinedFinancials, scenario) => {
   const valuations = {}
+  const ownership = scenario.ownership
 
-  if (valuation.catx > 0 || valuation.cactus > 0) {
-    const valuationSource = valuation.catx > 0 ? 'catx' : 'cactus';
+  if (scenario.valuation.catx > 0 || scenario.valuation.cactus > 0) {
+    const valuationSource = scenario.valuation.catx > 0 ? 'catx' : 'cactus';
 
     valuations.merger = {
       source: valuationSource,
