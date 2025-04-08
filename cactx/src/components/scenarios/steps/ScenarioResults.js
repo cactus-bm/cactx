@@ -63,45 +63,18 @@ const ScenarioResults = ({ scenario, companies }) => {
             
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" color="text.secondary">
-                {results.valuation.isCustomValuation 
-                  ? `${results.valuation.valuationSource === 'catx' ? 'CatX' : 'Cactus'} Fixed Valuation` 
-                  : 'Calculated Valuation'}
+                Total Valuation
               </Typography>
               <Typography variant="h4">
-                {formatCurrency(results.valuation.weightedValue)}
+                {formatCurrency(results.valuation.merger.valuation)}
               </Typography>
-              {results.valuation.isCustomValuation && (
-                <Typography variant="body2" color="text.secondary">
-                  Using fixed valuation from {results.valuation.valuationSource === 'catx' ? 'CatX' : 'Cactus'}
-                </Typography>
-              )}
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                With Ben Vested: {formatCurrency(results.valuation.ben.valuation)}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Cash on Hand: {formatCurrency(results.valuation.cash.valuation)}
+              </Typography>
             </Box>
-            
-            <Divider sx={{ my: 2 }} />
-            
-            <Typography variant="subtitle2" gutterBottom>
-              Valuation Metrics
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="body2" color="text.secondary">
-                  ARR Multiple
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {results.valuation.arrMultiple}x
-                </Typography>
-              </Grid>
-              
-              <Grid item xs={6}>
-                <Typography variant="body2" color="text.secondary">
-                  Profit Multiple
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {results.valuation.profitMultiple}x
-                </Typography>
-              </Grid>
-            </Grid>
-            
           </Paper>
         </Grid>
         
