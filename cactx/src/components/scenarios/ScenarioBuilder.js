@@ -67,8 +67,9 @@ const ScenarioBuilder = () => {
     },
     createdAt: new Date().toISOString(),
     ownership: {
-      catx: 50,
-      cactus: 50
+      catx: 12,
+      cactus: 80,
+      ben: 8
     },
     financialAssumptions: {
       costSynergies: 10,
