@@ -164,10 +164,8 @@ const ScenarioBuilder = () => {
   };
   
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this scenario?')) {
       dispatch(deleteScenario({ id: scenarioData.id }));
       navigate('/');
-    }
   };
 
   const handleNewScenario = () => {

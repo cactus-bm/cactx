@@ -172,7 +172,6 @@ const InvestorManagement = ({ companyId }) => {
   };
   
   const handleDeleteInvestor = (type, investorName) => {
-    if (window.confirm(`Are you sure you want to delete the investor "${investorName}"?`)) {
       const updatedInvestors = {
         ...company.investors
       };
@@ -186,7 +185,6 @@ const InvestorManagement = ({ companyId }) => {
           investors: updatedInvestors
         }
       }));
-    }
   };
   
   // Calculate total equity percentage
