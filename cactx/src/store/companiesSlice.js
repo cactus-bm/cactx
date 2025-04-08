@@ -11,6 +11,47 @@ const initialState = {
         employees: 50,
         offices: 2,
         marketShare: 15,
+      },
+      investors: {
+        equity: [
+          {
+            name: 'Founder',
+            percentage: 0.65  // 65% ownership
+          },
+          {
+            name: 'Angel Investor',
+            percentage: 0.15  // 15% ownership
+          },
+          {
+            name: 'Seed Fund',
+            percentage: 0.20  // 20% ownership
+          }
+        ],
+        safe: [
+          {
+            name: 'Growth Capital',
+            amount: 250000  // $250,000 invested
+          },
+          {
+            name: 'Strategic Investor',
+            amount: 350000  // $350,000 invested
+          }
+        ],
+        employees: [
+          {
+            name: 'Option Pool',
+            percentage: 0.10,  // 10% reserved for employees
+            allocated: 0.04   // 4% already allocated
+          },
+          {
+            name: 'John Smith (CTO)',
+            percentage: 0.02  // 2% ownership
+          },
+          {
+            name: 'Alice Johnson (VP Engineering)',
+            percentage: 0.02  // 2% ownership
+          }
+        ]
       }
     },
     {
@@ -22,6 +63,43 @@ const initialState = {
         employees: 75,
         offices: 3,
         marketShare: 20,
+      },
+      investors: {
+        equity: [
+          {
+            name: 'Angel Investor',
+            percentage: 0.15  // 15% ownership
+          },
+          {
+            name: 'Seed Fund',
+            percentage: 0.20  // 20% ownership
+          }
+        ],
+        safe: [
+          {
+            name: 'Growth Capital',
+            amount: 250000  // $250,000 invested
+          },
+          {
+            name: 'Strategic Investor',
+            amount: 350000  // $350,000 invested
+          }
+        ],
+        employees: [
+          {
+            name: 'Option Pool',
+            percentage: 0.10,  // 10% reserved for employees
+            allocated: 0.04   // 4% already allocated
+          },
+          {
+            name: 'John Smith (CTO)',
+            percentage: 0.02  // 2% ownership
+          },
+          {
+            name: 'Alice Johnson (VP Engineering)',
+            percentage: 0.02  // 2% ownership
+          }
+        ]
       }
     }
   ],
