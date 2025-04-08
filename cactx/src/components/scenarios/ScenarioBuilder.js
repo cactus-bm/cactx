@@ -30,8 +30,8 @@ import { selectCompanies } from '../../store/companiesSlice';
 
 import BasicInfo from './steps/BasicInfo';
 import OwnershipStructure from './steps/OwnershipStructure';
-import FinancialAssumptions from './steps/FinancialAssumptions';
-import OperationalAssumptions from './steps/OperationalAssumptions';
+import ValuationAssumptions from './steps/ValuationAssumptions';
+// Removed OperationalAssumptions import
 import ScenarioResults from './steps/ScenarioResults';
 
 import { 
@@ -44,8 +44,7 @@ import {
 const steps = [
   'Basic Information',
   'Ownership Structure',
-  'Financial Assumptions',
-  'Operational Assumptions',
+  'Valuation Assumptions',
   'Review Results'
 ];
 
@@ -71,18 +70,11 @@ const ScenarioBuilder = () => {
       cactus: 80,
       ben: 8
     },
-    financialAssumptions: {
-      costSynergies: 10,
-      revenueGrowth: 5,
-      integrationCosts: 100000,
-      annualRevenueGrowth: 7,
-      annualExpenseGrowth: 4,
+    valuationAssumptions: {
+      catxValuation: 0,
+      cactusValuation: 0
     },
-    operationalAssumptions: {
-      workforceReduction: 5,
-      officeConsolidation: 15,
-      integrationTimeline: 12, // months
-    },
+    // Removed operational assumptions
     results: null
   });
   
@@ -112,34 +104,33 @@ const ScenarioBuilder = () => {
         const combinedFinancials = calculateCombinedFinancials(
           catx, 
           cactus, 
-          { 
-            costSynergies: scenarioData.financialAssumptions.costSynergies,
-            revenueGrowth: scenarioData.financialAssumptions.revenueGrowth
-          }
+          {} // Using default values in the calculation function
         );
         
         const operationalMetrics = calculateOperationalMetrics(
           catx,
           cactus,
-          {
-            workforceReduction: scenarioData.operationalAssumptions.workforceReduction,
-            officeConsolidation: scenarioData.operationalAssumptions.officeConsolidation
-          }
+          {} // Using default values in the calculation function
         );
         
+        // Use valuation from user input if available
         const valuation = calculateValuation(
           combinedFinancials,
           {
             revenueMultiplier: 2.5,
-            profitMultiplier: 12
+            profitMultiplier: 12,
+            // Pass user-defined valuations if available
+            catxValuation: scenarioData.valuationAssumptions.catxValuation,
+            cactusValuation: scenarioData.valuationAssumptions.cactusValuation
           }
         );
         
         const projections = createProjections(
           combinedFinancials,
           {
-            annualRevenueGrowth: scenarioData.financialAssumptions.annualRevenueGrowth,
-            annualExpenseGrowth: scenarioData.financialAssumptions.annualExpenseGrowth
+            // Use fixed growth rates for projections since we removed financial assumptions
+            annualRevenueGrowth: 5,
+            annualExpenseGrowth: 3
           },
           5
         );
@@ -158,8 +149,7 @@ const ScenarioBuilder = () => {
     }
   }, [
     companies, 
-    scenarioData.financialAssumptions, 
-    scenarioData.operationalAssumptions
+    scenarioData.valuationAssumptions
   ]);
   
   // Handle step navigation
@@ -217,19 +207,12 @@ const ScenarioBuilder = () => {
         );
       case 2:
         return (
-          <FinancialAssumptions 
-            data={scenarioData.financialAssumptions} 
-            onChange={(field, value) => handleChange('financialAssumptions', field, value)} 
+          <ValuationAssumptions 
+            data={scenarioData.valuationAssumptions} 
+            onChange={(field, value) => handleChange('valuationAssumptions', field, value)} 
           />
         );
       case 3:
-        return (
-          <OperationalAssumptions 
-            data={scenarioData.operationalAssumptions} 
-            onChange={(field, value) => handleChange('operationalAssumptions', field, value)} 
-          />
-        );
-      case 4:
         return (
           <ScenarioResults 
             scenario={scenarioData}

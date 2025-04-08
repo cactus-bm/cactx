@@ -14,9 +14,9 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
   const combinedCashOnHand = companyA.cashOnHand + companyB.cashOnHand;
   const combinedArr = companyA.arr + companyB.arr;
   
-  // Apply synergy effects if defined in scenario
-  const synergySavings = scenario.costSynergies || 0;
-  const revenueBoost = scenario.revenueGrowth || 0;
+  // Fixed synergy effects (removed dynamic parameters)
+  const synergySavings = 10; // Default 10% cost synergies
+  const revenueBoost = 5; // Default 5% revenue growth
   
   // Calculate adjusted figures with synergies
   const adjustedArr = combinedArr * (1 + revenueBoost / 100);
@@ -50,9 +50,9 @@ export const calculateOperationalMetrics = (companyA, companyB, scenario) => {
   const combinedEmployees = companyA.metrics.employees + companyB.metrics.employees;
   const combinedOffices = companyA.metrics.offices + companyB.metrics.offices;
   
-  // Apply workforce optimization if defined in scenario
-  const workforceReduction = scenario.workforceReduction || 0;
-  const officeConsolidation = scenario.officeConsolidation || 0;
+  // Fixed optimization values (removed operational assumptions step)
+  const workforceReduction = 5; // Default 5% workforce reduction
+  const officeConsolidation = 10; // Default 10% office consolidation
   
   // Calculate adjusted figures with optimizations
   const adjustedEmployees = combinedEmployees * (1 - workforceReduction / 100);
@@ -75,6 +75,24 @@ export const calculateOperationalMetrics = (companyA, companyB, scenario) => {
  * @returns {Object} Valuation metrics
  */
 export const calculateValuation = (combinedFinancials, scenario) => {
+  // Check if a custom valuation was provided
+  if (scenario.catxValuation > 0 || scenario.cactusValuation > 0) {
+    const customValue = scenario.catxValuation || scenario.cactusValuation;
+    
+    // If we have a custom valuation, use that directly
+    return {
+      totalValue: customValue,
+      arrMultiple: (customValue / combinedFinancials.arr).toFixed(1),
+      profitMultiple: (customValue / combinedFinancials.profit).toFixed(1),
+      valuationMethod: scenario.catxValuation > 0 ? 'CatX Fixed Valuation' : 'Cactus Fixed Valuation',
+      // Include the original values for reference
+      arrBasedValue: combinedFinancials.arr * 5, // Using standard 5x multiple
+      profitBasedValue: combinedFinancials.profit * 12, // Using standard 12x multiple
+      cashBasedValue: combinedFinancials.cashOnHand
+    };
+  }
+  
+  // If no custom valuation, use the standard calculation method
   // SaaS company valuation is typically based on ARR multiples
   const arrMultiplier = scenario.arrMultiplier || 5; // Default 5x ARR
   const profitMultiplier = scenario.profitMultiplier || 12; // Higher multiple for profit in SaaS
