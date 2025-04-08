@@ -117,11 +117,11 @@ const ScenarioBuilder = () => {
         const valuation = calculateValuation(
           combinedFinancials,
           {
-            revenueMultiplier: 2.5,
-            profitMultiplier: 12,
-            // Pass user-defined valuations if available
-            catxValuation: scenarioData.valuationAssumptions.catxValuation,
-            cactusValuation: scenarioData.valuationAssumptions.cactusValuation
+            valuation: {
+              catx: scenarioData.valuationAssumptions.catxValuation,
+              cactus: scenarioData.valuationAssumptions.cactusValuation,
+            },
+            ownership: scenarioData.ownership
           }
         );
         
