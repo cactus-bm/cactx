@@ -34,6 +34,11 @@ const AppNavigation = () => {
       path: '/'
     },
     {
+      text: 'Investor Management',
+      icon: <PeopleIcon />,
+      path: '/investors'
+    },
+    {
       text: 'Scenario Builder',
       icon: <TuneIcon />,
       path: '/scenarios'
@@ -47,11 +52,6 @@ const AppNavigation = () => {
       text: 'Reports',
       icon: <AssessmentIcon />,
       path: '/reports'
-    },
-    {
-      text: 'Investor Management',
-      icon: <PeopleIcon />,
-      path: '/investors'
     }
   ];
   
