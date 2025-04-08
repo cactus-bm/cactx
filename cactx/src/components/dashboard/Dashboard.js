@@ -9,6 +9,7 @@ import {
   CardContent, 
   CardActions,
   Button,
+  Stack,
   Divider,
   Paper
 } from '@mui/material';
@@ -91,16 +92,20 @@ const Dashboard = () => {
                       Created: {new Date(scenario.createdAt).toLocaleDateString()}
                     </Typography>
                     <Divider sx={{ my: 1 }} />
+                    <Stack spacing={1}>
                     <Typography variant="body2">
-                      Ownership: CatX ({scenario.ownership?.catx || 0}%) - 
-                      Cactus ({scenario.ownership?.cactus || 0}%)
+                      {"Ownership:"} 
                     </Typography>
                     <Typography variant="body2">
-                      Cost Synergies: {scenario.costSynergies || 0}%
+                      {scenario.ownership?.catx > 0 ? `CatX (${scenario.ownership.catx}%) ` : ''}
                     </Typography>
                     <Typography variant="body2">
-                      Revenue Growth: {scenario.revenueGrowth || 0}%
+                      {scenario.ownership?.cactus > 0 ? `Cactus (${scenario.ownership.cactus}%) ` : ''}
                     </Typography>
+                    <Typography variant="body2">
+                      {scenario.ownership?.ben > 0 ? `Ben (${scenario.ownership.ben}%)` : ''}
+                    </Typography>
+                    </Stack>
                   </CardContent>
                   <CardActions>
                     <Button size="small" onClick={() => navigate(`/scenarios/${scenario.id}`)}>

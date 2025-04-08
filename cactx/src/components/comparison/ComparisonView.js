@@ -88,12 +88,20 @@ const ComparisonView = () => {
             
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="medium">
                   <InputLabel>First Scenario</InputLabel>
                   <Select
                     value={selectedScenarios[0] || ''}
+                    sx={{ minWidth:"300px" }}
                     label="First Scenario"
                     onChange={(e) => handleScenarioChange(0, e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
                   >
                     <MenuItem value="">
                       <em>Select a scenario</em>
@@ -112,12 +120,20 @@ const ComparisonView = () => {
               </Grid>
               
               <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
+                <FormControl fullWidth size="medium">
                   <InputLabel>Second Scenario</InputLabel>
                   <Select
                     value={selectedScenarios[1] || ''}
+                    sx={{ minWidth:"300px" }}
                     label="Second Scenario"
                     onChange={(e) => handleScenarioChange(1, e.target.value)}
+                    MenuProps={{
+                      PaperProps: {
+                        style: {
+                          maxHeight: 300
+                        }
+                      }
+                    }}
                   >
                     <MenuItem value="">
                       <em>Select a scenario</em>
@@ -160,12 +176,12 @@ const ComparisonView = () => {
                         </Grid>
                         <Grid item xs={4}>
                           <Typography variant="subtitle2" color="primary.main">
-                            {scenarioObjects[0].name}
+                            {scenarioObjects[0].basicInfo.name}
                           </Typography>
                         </Grid>
                         <Grid item xs={4}>
                           <Typography variant="subtitle2" color="secondary.main">
-                            {scenarioObjects[1].name}
+                            {scenarioObjects[1].basicInfo.name}
                           </Typography>
                         </Grid>
                         
@@ -193,251 +209,6 @@ const ComparisonView = () => {
                           <Typography>{scenarioObjects[1].ownership?.cactus || 0}%</Typography>
                         </Grid>
                         
-                        <Grid item xs={4}>
-                          <Typography>Cost Synergies</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].financialAssumptions?.costSynergies || 0}%
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].financialAssumptions?.costSynergies || 0}%
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Revenue Growth</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].financialAssumptions?.revenueGrowth || 0}%
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].financialAssumptions?.revenueGrowth || 0}%
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Workforce Reduction</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].operationalAssumptions?.workforceReduction || 0}%
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].operationalAssumptions?.workforceReduction || 0}%
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                
-                {/* Financial Results Comparison */}
-                <Grid item xs={12}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        Financial Results
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2">Metric</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="primary.main">
-                            {scenarioObjects[0].name}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="secondary.main">
-                            {scenarioObjects[1].name}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                          <Divider />
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Combined Revenue</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              formatCurrency(scenarioObjects[0].results.combinedFinancials.revenue) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              formatCurrency(scenarioObjects[1].results.combinedFinancials.revenue) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Combined Expenses</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              formatCurrency(scenarioObjects[0].results.combinedFinancials.expenses) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              formatCurrency(scenarioObjects[1].results.combinedFinancials.expenses) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Profit</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              formatCurrency(scenarioObjects[0].results.combinedFinancials.profit) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              formatCurrency(scenarioObjects[1].results.combinedFinancials.profit) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Profit Margin</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              `${scenarioObjects[0].results.combinedFinancials.profitMargin.toFixed(1)}%` : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              `${scenarioObjects[1].results.combinedFinancials.profitMargin.toFixed(1)}%` : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Valuation</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              formatCurrency(scenarioObjects[0].results.valuation.weightedValue) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              formatCurrency(scenarioObjects[1].results.valuation.weightedValue) : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                
-                {/* Operational Results Comparison */}
-                <Grid item xs={12}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        Operational Results
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2">Metric</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="primary.main">
-                            {scenarioObjects[0].name}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="secondary.main">
-                            {scenarioObjects[1].name}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                          <Divider />
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Employees</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              scenarioObjects[0].results.operationalMetrics.employees.toLocaleString() : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              scenarioObjects[1].results.operationalMetrics.employees.toLocaleString() : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Offices</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              scenarioObjects[0].results.operationalMetrics.offices : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              scenarioObjects[1].results.operationalMetrics.offices : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Market Share</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[0].results ? 
-                              `${scenarioObjects[0].results.operationalMetrics.marketShare}%` : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>
-                            {scenarioObjects[1].results ? 
-                              `${scenarioObjects[1].results.operationalMetrics.marketShare}%` : 
-                              'N/A'}
-                          </Typography>
-                        </Grid>
                       </Grid>
                     </CardContent>
                   </Card>
