@@ -33,11 +33,10 @@ describe('Equity Calculations', () => {
       const result = calculateSplit(mockInvestors, valuation);
       
       // Calculate expected values
-      // Total equity: 0.7 + 0.2 = 0.9
       // SAFE conversions: 500k/5M (cap hit) = 0.1, 300k/10M = 0.03
-      // Employee pool: 0.1 allocation (from utility assumption)
-      // Total before normalization: 0.9 + 0.1 + 0.03 + 0.1 = 1.13
-      // After normalization, each percentage is divided by 1.13
+      // Thus 0.87 left.
+      // Equity split should be 0.87*.9 = 0.783
+      // Employee pool is whats left so 0.087
       
       expect(result).toHaveLength(5); // 2 equity + 2 safe + 1 employee investors
       
@@ -51,12 +50,16 @@ describe('Equity Calculations', () => {
       expect(founder).toBeDefined();
       expect(safe1).toBeDefined();
       expect(employee).toBeDefined();
+      expect(angel).toBeDefined();
+      expect(safe2).toBeDefined();
       
-      // Approximately 0.7/1.13 = 0.619
-      expect(founder.percentage).toBeCloseTo(0.619, 3); 
+      expect(founder.percentage + angel.percentage).toBeCloseTo(0.783, 3); 
       
-      // SAFE 1 hits cap, so 0.1/1.13 = 0.0885
-      expect(safe1.percentage).toBeCloseTo(0.0885, 3);
+      expect(safe1.percentage).toBeCloseTo(0.1, 3);
+      expect(safe2.percentage).toBeCloseTo(0.03, 3);
+      expect(employee.percentage).toBeCloseTo(0.087, 3)
+      expect(founder.percentage).toBeCloseTo(0.609, 3)
+      expect(angel.percentage).toBeCloseTo(0.174, 3)
     });
 
     test('should handle empty investor categories', () => {
@@ -70,6 +73,8 @@ describe('Equity Calculations', () => {
       // Total should be 0.7 + 0.2 = 0.9, normalized to 1.0
       const founder = result.find(i => i.name === 'Founder');
       expect(founder.percentage).toBeCloseTo(0.7/0.9, 5);
+      const angel = result.find(i => i.name === 'Angel');
+      expect(angel.percentage).toBeCloseTo(0.2/0.9, 5);
     });
   });
 
@@ -97,14 +102,25 @@ describe('Equity Calculations', () => {
       
       expect(result[0].percentage).toBe(0.05); // 1M/20M = 0.05
     });
+
+    test('should handle zero cap specified', () => {
+      const safeWithZeroCap = [
+        { name: 'Zero Cap SAFE', amount: 1000000, cap: 0 } // Zero cap specified
+      ];
+      
+      const valuation = 20000000;
+      const result = convertSafeToEquity(safeWithZeroCap, valuation);
+      
+      expect(result[0].percentage).toBe(0.05); // 1M/20M = 0.05
+    });
   });
 
   describe('convertEmployeesToEquity', () => {
     test('should convert employee allocations to equity', () => {
-      const result = convertEmployeesToEquity(mockInvestors.employees);
+      const result = convertEmployeesToEquity(mockInvestors.employees, 0.5);
       
       expect(result).toHaveLength(1);
-      expect(result[0].percentage).toBe(0.1); // 100% of the 10% allocation
+      expect(result[0].percentage).toBe(0.5); // 100% of the 50% allocation
     });
 
     test('should handle multiple employees with different allocations', () => {
@@ -113,16 +129,16 @@ describe('Equity Calculations', () => {
         { name: 'Employee 2', allocated: 40 }
       ];
       
-      const result = convertEmployeesToEquity(employees);
+      const result = convertEmployeesToEquity(employees, 0.5);
       
       expect(result).toHaveLength(2);
-      expect(result[0].percentage).toBe(0.06); // (60/100) * 0.1 = 0.06
-      expect(result[1].percentage).toBe(0.04); // (40/100) * 0.1 = 0.04
+      expect(result[0].percentage).toBe(0.3); // (60/100) * 0.5 = 0.3
+      expect(result[1].percentage).toBe(0.2); // (40/100) * 0.5 = 0.2
     });
 
     test('should handle empty employee list', () => {
-      const result = convertEmployeesToEquity([]);
-      expect(result).toEqual([]);
+      const result = convertEmployeesToEquity([], 0.5);
+      expect(result).toEqual({name: "Residue", percentage: 0.5});
     });
   });
 
