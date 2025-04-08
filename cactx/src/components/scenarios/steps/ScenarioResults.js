@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
+import OwnershipChart from '../../visualizations/OwnershipChart';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -114,51 +115,8 @@ const ScenarioResults = ({ scenario, companies }) => {
               </Grid>
             </Grid>
             
-            <Box sx={{ mt: 3, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
-              <Box sx={{ 
-                height: 30, 
-                display: 'flex', 
-                width: '100%', 
-                borderRadius: 1,
-                overflow: 'hidden'
-              }}>
-                {scenario.ownership.catx > 0 && <Box 
-                  sx={{
-                    backgroundColor: 'secondary.light',
-                    width: `${scenario.ownership.catx}%`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    minWidth: '40px'
-                  }}>
-                  {scenario.ownership.catx}%
-                </Box>}
-                {scenario.ownership.cactus > 0 && <Box 
-                  sx={{
-                    backgroundColor: 'primary.light',
-                    width: `${scenario.ownership.cactus}%`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    minWidth: '40px'
-                  }}>
-                  {scenario.ownership.cactus}%
-                </Box>}
-                {scenario.ownership.ben > 0 && <Box 
-                  sx={{
-                    backgroundColor: 'warning.light',
-                    width: `${scenario.ownership.ben}%`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    minWidth: '40px'
-                  }}>
-                  {scenario.ownership.ben}%
-                </Box>}
-              </Box>
+            <Box sx={{ mt: 3 }}>
+              <OwnershipChart ownership={scenario.ownership} />
             </Box>
           </Paper>
         </Grid>

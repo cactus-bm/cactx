@@ -9,6 +9,7 @@ import {
   TextField,
   InputAdornment
 } from '@mui/material';
+import OwnershipChart from '../../visualizations/OwnershipChart';
 
 const OwnershipStructure = ({ data, onChange }) => {
   // Ensure the initial values are within bounds
@@ -267,51 +268,7 @@ const OwnershipStructure = ({ data, onChange }) => {
               Ownership Distribution
             </Typography>
             <Divider sx={{ my: 2 }} />
-            <Box sx={{ 
-              height: 40, 
-              display: 'flex', 
-              width: '100%', 
-              borderRadius: 1,
-              overflow: 'hidden'
-            }}>
-              <Box 
-                sx={{
-                  backgroundColor: 'secondary.light',
-                  width: `${data.catx}%`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  minWidth: data.catx > 0 ? '40px' : '0px'
-                }}>
-                {data.catx}%
-              </Box>
-              <Box 
-                sx={{
-                  backgroundColor: 'primary.light',
-                  width: `${data.cactus}%`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  minWidth: data.cactus > 0 ? '40px' : '0px'
-                }}>
-                {data.cactus}%
-              </Box>
-              <Box 
-                sx={{
-                  backgroundColor: 'warning.light',
-                  width: `${data.ben}%`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  minWidth: data.ben > 0 ? '40px' : '0px'
-                }}>
-                {data.ben}%
-              </Box>
-            </Box>
-            
+            <OwnershipChart ownership={data} />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
               This visualization shows the relative ownership percentage between CatX and Cactus in the merged company.
             </Typography>
