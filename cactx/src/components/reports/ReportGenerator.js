@@ -125,7 +125,7 @@ const ReportGenerator = () => {
                     </MenuItem>
                     {scenarios.map((scenario) => (
                       <MenuItem key={scenario.id} value={scenario.id}>
-                        {scenario.name}
+                        {scenario.basicInfo.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -223,19 +223,21 @@ const ReportGenerator = () => {
                       Scenario Overview
                     </Typography>
                     <Typography variant="body1" paragraph>
-                      <strong>Scenario Name:</strong> {scenarioObject.name}
+                      <strong>Scenario Name:</strong> {scenarioObject.basicInfo.name}
                     </Typography>
-                    {scenarioObject.description && (
+                    {scenarioObject.basicInfo.description && (
                       <Typography variant="body1" paragraph>
-                        <strong>Description:</strong> {scenarioObject.description}
+                        <strong>Description:</strong> {scenarioObject.basicInfo.description}
                       </Typography>
                     )}
                     <Typography variant="body1" paragraph>
                       <strong>Created:</strong> {new Date(scenarioObject.createdAt).toLocaleDateString()}
                     </Typography>
                     <Typography variant="body1" paragraph>
-                      <strong>Ownership Structure:</strong> CatX ({scenarioObject.ownership?.catx || 0}%) - 
-                      Cactus ({scenarioObject.ownership?.cactus || 0}%)
+                      <strong>Ownership Structure:</strong> 
+                      {scenarioObject.ownership?.catx > 0 ? `CatX (${scenarioObject.ownership.catx}%) ` : ''}
+                      {scenarioObject.ownership?.cactus > 0 ? `Cactus (${scenarioObject.ownership.cactus}%) ` : ''}
+                      {scenarioObject.ownership?.ben > 0 ? `Ben (${scenarioObject.ownership.ben}%)` : ''}
                     </Typography>
                     <Divider sx={{ my: 3 }} />
                   </>
