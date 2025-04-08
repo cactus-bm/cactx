@@ -108,7 +108,9 @@ export const companiesSlice = createSlice({
       }
     },
     setCompanies: (state, action) => {
-      state.companies = action.payload;
+      // This action replaces the entire companies array with the provided payload
+      // Used for loading saved state from local storage
+      state.companies = action.payload.companies || action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
