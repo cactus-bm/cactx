@@ -104,7 +104,7 @@ const ComparisonView = () => {
                         value={scenario.id}
                         disabled={scenario.id === selectedScenarios[1]}
                       >
-                        {scenario.name}
+                        {scenario.basicInfo.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -128,7 +128,7 @@ const ComparisonView = () => {
                         value={scenario.id}
                         disabled={scenario.id === selectedScenarios[0]}
                       >
-                        {scenario.name}
+                        {scenario.basicInfo.name}
                       </MenuItem>
                     ))}
                   </Select>
