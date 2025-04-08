@@ -60,8 +60,10 @@ const ScenarioBuilder = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [scenarioData, setScenarioData] = useState({
     id: crypto.randomUUID(),
-    name: '',
-    description: '',
+    basicInfo: {
+      name: '',
+      description: '',
+    },
     createdAt: new Date().toISOString(),
     ownership: {
       catx: 50,
@@ -200,8 +202,8 @@ const ScenarioBuilder = () => {
       case 0:
         return (
           <BasicInfo 
-            data={scenarioData} 
-            onChange={(field, value) => handleChange('', field, value)} 
+            data={scenarioData.basicInfo} 
+            onChange={(field, value) => handleChange('basicInfo', field, value)} 
           />
         );
       case 1:
