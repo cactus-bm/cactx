@@ -5,12 +5,8 @@ const initialState = {
     {
       id: 'catx',
       name: 'CatX',
-      financials: {
-        revenue: 1000000,
-        expenses: 750000,
-        assets: 2000000,
-        liabilities: 1000000,
-      },
+      cashOnHand: 800000,
+      arr: 250000,
       metrics: {
         employees: 50,
         offices: 2,
@@ -20,12 +16,8 @@ const initialState = {
     {
       id: 'cactus',
       name: 'Cactus',
-      financials: {
-        revenue: 1500000,
-        expenses: 1200000,
-        assets: 3000000,
-        liabilities: 1800000,
-      },
+      cashOnHand: 950000,
+      arr: 320000,
       metrics: {
         employees: 75,
         offices: 3,

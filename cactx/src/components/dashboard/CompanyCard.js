@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Card, 
   CardContent, 
   Typography,
   Divider,
   Box,
-  Avatar
+  Avatar,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Grid
 } from '@mui/material';
 import BusinessIcon from '@mui/icons-material/Business';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import { useDispatch } from 'react-redux';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-US', { 
@@ -17,18 +24,41 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const CompanyCard = ({ company }) => {
-  const { id, name, financials, metrics } = company;
-  
-  // Calculate derived metrics
-  const profit = financials.revenue - financials.expenses;
-  const profitMargin = (profit / financials.revenue) * 100;
-  const netWorth = financials.assets - financials.liabilities;
+const CompanyCard = ({ company, onUpdateCompany }) => {
+  const { id, name, cashOnHand, arr, metrics } = company;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedCashOnHand, setEditedCashOnHand] = useState(cashOnHand);
+  const [editedArr, setEditedArr] = useState(arr);
   
   // Determine styling based on company
   const isGreen = id === 'cactus';
   const primaryColor = isGreen ? '#2e7d32' : '#1976d2';
   const avatarBgColor = isGreen ? 'primary.main' : 'secondary.main';
+  
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Save changes
+      onUpdateCompany(id, { 
+        cashOnHand: editedCashOnHand,
+        arr: editedArr 
+      });
+    }
+    setIsEditing(!isEditing);
+  };
+  
+  const handleCashOnHandChange = (e) => {
+    const value = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(value)) {
+      setEditedCashOnHand(value);
+    }
+  };
+  
+  const handleArrChange = (e) => {
+    const value = parseInt(e.target.value.replace(/[^0-9]/g, ''), 10);
+    if (!isNaN(value)) {
+      setEditedArr(value);
+    }
+  };
   
   return (
     <Card className="card">
@@ -44,103 +74,64 @@ const CompanyCard = ({ company }) => {
           </Typography>
         </Box>
         
-        <Typography variant="h6" component="div" sx={{ mb: 1 }}>
+        <Typography variant="h6" component="div" sx={{ mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           Financial Overview
+          <IconButton size="small" onClick={handleEditToggle} color={isEditing ? "primary" : "default"}>
+            {isEditing ? <CheckIcon /> : <EditIcon />}
+          </IconButton>
         </Typography>
         
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Revenue
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {formatCurrency(financials.revenue)}
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Expenses
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {formatCurrency(financials.expenses)}
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Profit
-            </Typography>
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                fontWeight: 'medium',
-                color: profit >= 0 ? 'success.main' : 'error.main'
-              }}
-            >
-              {formatCurrency(profit)}
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Profit Margin
-            </Typography>
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                fontWeight: 'medium',
-                color: profitMargin >= 0 ? 'success.main' : 'error.main'
-              }}
-            >
-              {profitMargin.toFixed(1)}%
-            </Typography>
-          </div>
+        <Box sx={{ mb: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="body2" color="text.secondary">
+                Cash on Hand
+              </Typography>
+              {isEditing ? (
+                <TextField
+                  value={editedCashOnHand}
+                  onChange={handleCashOnHandChange}
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                />
+              ) : (
+                <Typography variant="h5" sx={{ fontWeight: 'medium', color: primaryColor }}>
+                  {formatCurrency(cashOnHand)}
+                </Typography>
+              )}
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <Typography variant="body2" color="text.secondary">
+                Annual Recurring Revenue
+              </Typography>
+              {isEditing ? (
+                <TextField
+                  value={editedArr}
+                  onChange={handleArrChange}
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                />
+              ) : (
+                <Typography variant="h5" sx={{ fontWeight: 'medium', color: primaryColor }}>
+                  {formatCurrency(arr)}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
         </Box>
         
-        <Divider sx={{ my: 2 }} />
-        
-        <Typography variant="h6" component="div" sx={{ mb: 1 }}>
-          Company Metrics
-        </Typography>
-        
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Employees
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {metrics.employees.toLocaleString()}
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Offices
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {metrics.offices}
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Market Share
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {metrics.marketShare}%
-            </Typography>
-          </div>
-          
-          <div>
-            <Typography variant="body2" color="text.secondary">
-              Net Worth
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-              {formatCurrency(netWorth)}
-            </Typography>
-          </div>
-        </Box>
+
       </CardContent>
     </Card>
   );

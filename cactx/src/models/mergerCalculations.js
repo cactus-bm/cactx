@@ -11,34 +11,30 @@
  */
 export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
   // Basic combination of financials
-  const combinedRevenue = companyA.financials.revenue + companyB.financials.revenue;
-  const combinedExpenses = companyA.financials.expenses + companyB.financials.expenses;
+  const combinedCashOnHand = companyA.cashOnHand + companyB.cashOnHand;
+  const combinedArr = companyA.arr + companyB.arr;
   
   // Apply synergy effects if defined in scenario
   const synergySavings = scenario.costSynergies || 0;
   const revenueBoost = scenario.revenueGrowth || 0;
   
   // Calculate adjusted figures with synergies
-  const adjustedRevenue = combinedRevenue * (1 + revenueBoost / 100);
-  const adjustedExpenses = combinedExpenses * (1 - synergySavings / 100);
+  const adjustedArr = combinedArr * (1 + revenueBoost / 100);
+  
+  // Estimate expenses based on ARR (simplified model)
+  const estimatedExpenses = combinedArr * 0.7; // Assuming 70% of ARR goes to expenses
+  const adjustedExpenses = estimatedExpenses * (1 - synergySavings / 100);
   
   // Calculate profitability metrics
-  const profit = adjustedRevenue - adjustedExpenses;
-  const profitMargin = (profit / adjustedRevenue) * 100;
-  
-  // Calculate combined asset metrics
-  const combinedAssets = companyA.financials.assets + companyB.financials.assets;
-  const combinedLiabilities = companyA.financials.liabilities + companyB.financials.liabilities;
-  const netWorth = combinedAssets - combinedLiabilities;
+  const profit = adjustedArr - adjustedExpenses;
+  const profitMargin = (profit / adjustedArr) * 100;
   
   return {
-    revenue: adjustedRevenue,
-    expenses: adjustedExpenses,
+    cashOnHand: combinedCashOnHand,
+    arr: adjustedArr,
+    estimatedExpenses: adjustedExpenses,
     profit,
-    profitMargin,
-    assets: combinedAssets,
-    liabilities: combinedLiabilities,
-    netWorth
+    profitMargin
   };
 };
 
@@ -79,26 +75,27 @@ export const calculateOperationalMetrics = (companyA, companyB, scenario) => {
  * @returns {Object} Valuation metrics
  */
 export const calculateValuation = (combinedFinancials, scenario) => {
-  // Simple multiplier-based valuation
-  const revenueMultiplier = scenario.revenueMultiplier || 2;
-  const profitMultiplier = scenario.profitMultiplier || 10;
+  // SaaS company valuation is typically based on ARR multiples
+  const arrMultiplier = scenario.arrMultiplier || 5; // Default 5x ARR
+  const profitMultiplier = scenario.profitMultiplier || 12; // Higher multiple for profit in SaaS
+  const cashMultiplier = 1.0; // Cash is valued at face value
   
   // Calculate valuations based on different methods
-  const revenueBasedValue = combinedFinancials.revenue * revenueMultiplier;
+  const arrBasedValue = combinedFinancials.arr * arrMultiplier;
   const profitBasedValue = combinedFinancials.profit * profitMultiplier;
-  const assetBasedValue = combinedFinancials.netWorth * 1.2; // 20% premium on net assets
+  const cashBasedValue = combinedFinancials.cashOnHand * cashMultiplier;
   
-  // Weighted average valuation
+  // Weighted average valuation for SaaS companies typically weighs ARR higher
   const weightedValue = (
-    (revenueBasedValue * 0.3) + 
-    (profitBasedValue * 0.5) + 
-    (assetBasedValue * 0.2)
+    (arrBasedValue * 0.6) + 
+    (profitBasedValue * 0.3) + 
+    (cashBasedValue * 0.1)
   );
   
   return {
-    revenueBasedValue,
+    arrBasedValue,
     profitBasedValue,
-    assetBasedValue,
+    cashBasedValue,
     weightedValue
   };
 };
@@ -112,26 +109,31 @@ export const calculateValuation = (combinedFinancials, scenario) => {
  */
 export const createProjections = (combinedFinancials, scenario, years = 5) => {
   const projections = [];
-  const baseRevenue = combinedFinancials.revenue;
-  const baseExpenses = combinedFinancials.expenses;
+  const arrGrowthRate = scenario.annualRevenueGrowth || 3;
+  const expenseGrowthRate = scenario.annualExpenseGrowth || 2;
   
-  // Growth assumptions
-  const annualRevenueGrowth = scenario.annualRevenueGrowth || 5; // 5% default
-  const annualExpenseGrowth = scenario.annualExpenseGrowth || 3; // 3% default
+  let currentArr = combinedFinancials.arr;
+  let currentExpenses = combinedFinancials.estimatedExpenses;
+  let currentCashOnHand = combinedFinancials.cashOnHand;
   
-  // Generate projections for each year
-  for (let year = 1; year <= years; year++) {
-    const yearlyRevenue = baseRevenue * Math.pow(1 + annualRevenueGrowth / 100, year);
-    const yearlyExpenses = baseExpenses * Math.pow(1 + annualExpenseGrowth / 100, year);
-    const yearlyProfit = yearlyRevenue - yearlyExpenses;
-    const yearlyProfitMargin = (yearlyProfit / yearlyRevenue) * 100;
+  for (let i = 1; i <= years; i++) {
+    // Calculate growth
+    currentArr = currentArr * (1 + arrGrowthRate / 100);
+    currentExpenses = currentExpenses * (1 + expenseGrowthRate / 100);
+    
+    const yearlyProfit = currentArr - currentExpenses;
+    const yearlyProfitMargin = (yearlyProfit / currentArr) * 100;
+    
+    // Update cash based on profit
+    currentCashOnHand += yearlyProfit;
     
     projections.push({
-      year,
-      revenue: yearlyRevenue,
-      expenses: yearlyExpenses,
+      year: i,
+      arr: currentArr,
+      expenses: currentExpenses,
       profit: yearlyProfit,
-      profitMargin: yearlyProfitMargin
+      profitMargin: yearlyProfitMargin,
+      cashOnHand: currentCashOnHand
     });
   }
   

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { 
   Typography, 
@@ -15,15 +15,20 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { selectScenarios } from '../../store/scenariosSlice';
-import { selectCompanies } from '../../store/companiesSlice';
+import { selectCompanies, updateCompanyData } from '../../store/companiesSlice';
 
 import DashboardSummary from './DashboardSummary';
 import CompanyCard from './CompanyCard';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const scenarios = useSelector(selectScenarios);
   const companies = useSelector(selectCompanies);
+  
+  const handleUpdateCompany = (id, data) => {
+    dispatch(updateCompanyData({ id, data }));
+  };
   
   return (
     <Box>
@@ -63,7 +68,7 @@ const Dashboard = () => {
       <Grid container spacing={3}>
         {companies.map(company => (
           <Grid item xs={12} md={6} key={company.id}>
-            <CompanyCard company={company} />
+            <CompanyCard company={company} onUpdateCompany={handleUpdateCompany} />
           </Grid>
         ))}
       </Grid>
