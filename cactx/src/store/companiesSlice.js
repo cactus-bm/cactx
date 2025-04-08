@@ -30,11 +30,13 @@ const initialState = {
         safe: [
           {
             name: 'Growth Capital',
-            amount: 250000  // $250,000 invested
+            amount: 250000,  // $250,000 invested
+            cap: 5000000    // $5M valuation cap
           },
           {
             name: 'Strategic Investor',
-            amount: 350000  // $350,000 invested
+            amount: 350000,  // $350,000 invested
+            cap: 7500000    // $7.5M valuation cap
           }
         ],
         employees: [
@@ -69,11 +71,13 @@ const initialState = {
         safe: [
           {
             name: 'Growth Capital',
-            amount: 250000  // $250,000 invested
+            amount: 250000,  // $250,000 invested
+            cap: 5000000    // $5M valuation cap
           },
           {
             name: 'Strategic Investor',
-            amount: 350000  // $350,000 invested
+            amount: 350000,  // $350,000 invested
+            cap: 7500000    // $7.5M valuation cap
           }
         ],
         employees: [

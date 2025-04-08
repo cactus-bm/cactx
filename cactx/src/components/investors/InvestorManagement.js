@@ -19,6 +19,7 @@ import {
   DialogActions,
   TextField,
   FormControl,
+  InputAdornment,
   InputLabel,
   Select,
   MenuItem
@@ -54,6 +55,7 @@ const InvestorManagement = ({ companyId }) => {
     name: '',
     percentage: 0,
     amount: 0,
+    cap: 0,
     allocated: 0
   });
   
@@ -68,6 +70,7 @@ const InvestorManagement = ({ companyId }) => {
         name: investor.name,
         percentage: type === 'equity' ? investor.percentage : 0,
         amount: type === 'safe' ? investor.amount : 0,
+        cap: type === 'safe' && investor.cap ? investor.cap : 0,
         allocated: type === 'employees' ? investor.allocated : 0
       });
     } else {
@@ -77,6 +80,7 @@ const InvestorManagement = ({ companyId }) => {
         name: '',
         percentage: type === 'equity' ? 0 : 0,
         amount: type === 'safe' ? 0 : 0,
+        cap: type === 'safe' ? 0 : 0,
         allocated: 0
       });
     }
@@ -95,7 +99,7 @@ const InvestorManagement = ({ companyId }) => {
     if (name === 'percentage') {
       // Convert percentage to decimal (0-1)
       processedValue = parseFloat(value) / 100;
-    } else if (name === 'amount') {
+    } else if (name === 'amount' || name === 'cap') {
       // Convert to number
       processedValue = parseFloat(value);
     }
@@ -125,7 +129,8 @@ const InvestorManagement = ({ companyId }) => {
         } else if (investorType === 'safe') {
           updatedInvestors.safe[index] = {
             name: formData.name,
-            amount: formData.amount
+            amount: formData.amount,
+            cap: formData.cap
           };
         } else if (investorType === 'employees') {
           updatedInvestors.employees[index] = {
@@ -144,7 +149,8 @@ const InvestorManagement = ({ companyId }) => {
       } else if (investorType === 'safe') {
         updatedInvestors.safe.push({
           name: formData.name,
-          amount: formData.amount
+          amount: formData.amount,
+          cap: formData.cap
         });
       } else if (investorType === 'employees') {
         updatedInvestors.employees.push({
@@ -299,6 +305,7 @@ const InvestorManagement = ({ companyId }) => {
                   <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell align="right">Investment Amount</TableCell>
+                    <TableCell align="right">Valuation Cap</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -307,6 +314,7 @@ const InvestorManagement = ({ companyId }) => {
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">{formatCurrency(investor.amount)}</TableCell>
+                      <TableCell align="right">{investor.cap ? formatCurrency(investor.cap) : 'N/A'}</TableCell>
                       <TableCell align="right">
                         <Button 
                           size="small" 
@@ -486,24 +494,36 @@ const InvestorManagement = ({ companyId }) => {
                   />
                 </Grid>
               ) : (
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Investment Amount"
-                    name="amount"
-                    type="number"
-                    InputProps={{
-                      startAdornment: '$'
-                    }}
-                    value={formData.amount}
-                    onChange={handleInputChange}
-                    required
-                    inputProps={{ 
-                      min: 0, 
-                      step: 1000 
-                    }}
-                  />
-                </Grid>
+                investorType === 'safe' && (
+                  <>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Investment Amount"
+                        name="amount"
+                        value={formData.amount}
+                        onChange={handleInputChange}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Valuation Cap"
+                        name="cap"
+                        value={formData.cap}
+                        onChange={handleInputChange}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                        }}
+                        helperText="The maximum company valuation at which the SAFE converts to equity"
+                      />
+                    </Grid>
+                  </>
+                )
               )}
             </Grid>
           </Box>

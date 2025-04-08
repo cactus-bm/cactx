@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -27,8 +27,6 @@ const InvestorsPage = () => {
   }, [companyId, activeCompany]);
   
   const handleCompanyChange = (event, newValue) => {
-    setActiveCompany(newValue);
-    // Update the URL when tab changes
     navigate(`/investors/${newValue}`);
   };
   
@@ -57,9 +55,22 @@ const InvestorsPage = () => {
         </Tabs>
       </Box>
       
-      {activeCompany && (
-        <InvestorManagement companyId={activeCompany} />
-      )}
+      <Box sx={{ position: 'relative', minHeight: '70vh' }}>
+        {companies.map((company) => (
+          <Box 
+            key={company.id}
+            sx={{
+              position: 'absolute',
+              width: '100%',
+              opacity: activeCompany === company.id ? 1 : 0,
+              visibility: activeCompany === company.id ? 'visible' : 'hidden',
+              transition: 'opacity 0.3s ease-in-out',
+            }}
+          >
+            <InvestorManagement companyId={company.id} />
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
