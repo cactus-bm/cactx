@@ -128,7 +128,8 @@ const ScenarioBuilder = () => {
     }
   }, [
     companies, 
-    scenarioData.valuationAssumptions
+    scenarioData.valuationAssumptions,
+    scenarioData.ownership
   ]);
   
   // Handle step navigation
