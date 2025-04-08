@@ -7,6 +7,7 @@ const initialState = {
   error: null,
 };
 
+
 export const scenariosSlice = createSlice({
   name: 'scenarios',
   initialState,

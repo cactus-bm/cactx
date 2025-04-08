@@ -17,6 +17,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 import { 
   selectScenarios, 
@@ -46,19 +47,10 @@ const steps = [
   'Review Results'
 ];
 
-const ScenarioBuilder = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const scenarios = useSelector(selectScenarios);
-  const currentScenario = useSelector(selectCurrentScenario);
-  const companies = useSelector(selectCompanies);
-  
-  const [activeStep, setActiveStep] = useState(0);
-  const [scenarioData, setScenarioData] = useState({
+const newScenario = () => ({
     id: crypto.randomUUID(),
 
-      basicInfo: {
+    basicInfo: {
       name: '',
       description: '',
     },
@@ -73,7 +65,22 @@ const ScenarioBuilder = () => {
       cactusValuation: 25e6
     },
     results: null
-  });
+  })
+
+const initialState = newScenario();
+
+
+const ScenarioBuilder = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const scenarios = useSelector(selectScenarios);
+  const currentScenario = useSelector(selectCurrentScenario);
+  const companies = useSelector(selectCompanies);
+  
+  const [activeStep, setActiveStep] = useState(0);
+  const [scenarioData, setScenarioData] = useState(null);
+
   
   // Load scenario data if editing existing scenario
   useEffect(() => {
@@ -92,7 +99,7 @@ const ScenarioBuilder = () => {
   
   // Calculate results whenever relevant inputs change
   useEffect(() => {
-    if (companies.length >= 2) {
+    if (companies.length >= 2 && scenarioData) {
       const catx = companies.find(c => c.id === 'catx');
       const cactus = companies.find(c => c.id === 'cactus');
       
@@ -109,8 +116,8 @@ const ScenarioBuilder = () => {
           combinedFinancials,
           {
             valuation: {
-              catx: scenarioData.valuationAssumptions.catxValuation,
-              cactus: scenarioData.valuationAssumptions.cactusValuation,
+              catx: scenarioData.valuationAssumptions?.catxValuation,
+              cactus: scenarioData.valuationAssumptions?.cactusValuation,
             },
             ownership: scenarioData.ownership
           }
@@ -128,9 +135,15 @@ const ScenarioBuilder = () => {
     }
   }, [
     companies, 
-    scenarioData.valuationAssumptions,
-    scenarioData.ownership
+    scenarioData?.ownership,
+    scenarioData?.valuationAssumptions,
   ]);
+
+  useEffect(() => {
+    if (currentScenario) {
+      setScenarioData(currentScenario);
+    }
+  }, [currentScenario]);
   
   // Handle step navigation
   const handleNext = () => {
@@ -155,6 +168,13 @@ const ScenarioBuilder = () => {
       dispatch(deleteScenario({ id: scenarioData.id }));
       navigate('/');
     }
+  };
+
+  const handleNewScenario = () => {
+    dispatch(setCurrentScenario(null));
+    setScenarioData(newScenario());
+    setActiveStep(0);
+    navigate('/scenarios')
   };
   
   // Handle form data changes
@@ -217,6 +237,16 @@ const ScenarioBuilder = () => {
         </Box>
         
         <Box>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<AddIcon />}
+              onClick={handleNewScenario}
+              sx={{ mr: 1 }}
+            >
+              New Scenario
+            </Button>
+          
           <Button 
             variant="contained" 
             color="primary" 
@@ -253,7 +283,7 @@ const ScenarioBuilder = () => {
       </Card>
       
       <Paper sx={{ p: 3, mb: 3 }}>
-        {getStepContent(activeStep)}
+          {scenarioData ? getStepContent(activeStep) : null}
       </Paper>
       
       <Box sx={{ display: 'flex', justifyContent: 'space-between', pt: 2 }}>
