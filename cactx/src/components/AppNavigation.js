@@ -16,6 +16,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import CompareIcon from '@mui/icons-material/Compare';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import TuneIcon from '@mui/icons-material/Tune';
+import PeopleIcon from '@mui/icons-material/People';
 import { useSelector } from 'react-redux';
 import { selectScenarios } from '../store/scenariosSlice';
 
@@ -46,6 +47,11 @@ const AppNavigation = () => {
       text: 'Reports',
       icon: <AssessmentIcon />,
       path: '/reports'
+    },
+    {
+      text: 'Investor Management',
+      icon: <PeopleIcon />,
+      path: '/investors'
     }
   ];
   

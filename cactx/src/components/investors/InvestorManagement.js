@@ -208,7 +208,7 @@ const InvestorManagement = ({ companyId }) => {
   return (
     <Box sx={{ mb: 4 }}>
       <Typography variant="h5" gutterBottom>
-        CatX Investor Management
+        {company.name} Investor Management
       </Typography>
       
       <Grid container spacing={4}>
@@ -240,7 +240,7 @@ const InvestorManagement = ({ companyId }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {catx?.investors?.equity?.map((investor) => (
+                  {company?.investors?.equity?.map((investor) => (
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">{formatPercentage(investor.percentage)}</TableCell>
@@ -303,7 +303,7 @@ const InvestorManagement = ({ companyId }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {catx?.investors?.safe?.map((investor) => (
+                  {company?.investors?.safe?.map((investor) => (
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">{formatCurrency(investor.amount)}</TableCell>
@@ -367,7 +367,7 @@ const InvestorManagement = ({ companyId }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {catx?.investors?.employees?.map((investor) => (
+                  {company?.investors?.employees?.map((investor) => (
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">

@@ -15,6 +15,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import ScenarioBuilder from './components/scenarios/ScenarioBuilder';
 import ComparisonView from './components/comparison/ComparisonView';
 import ReportGenerator from './components/reports/ReportGenerator';
+import InvestorsPage from './pages/InvestorsPage';
 
 // Main CSS
 import './App.css';
@@ -36,6 +37,8 @@ function App() {
                   <Route path="/scenarios/:id" element={<ScenarioBuilder />} />
                   <Route path="/comparison" element={<ComparisonView />} />
                   <Route path="/reports" element={<ReportGenerator />} />
+                  <Route path="/investors" element={<InvestorsPage />} />
+                  <Route path="/investors/:companyId" element={<InvestorsPage />} />
                 </Routes>
               </main>
             </div>

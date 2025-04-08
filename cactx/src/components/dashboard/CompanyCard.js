@@ -9,8 +9,10 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  Grid
+  Grid,
+  Button
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import BusinessIcon from '@mui/icons-material/Business';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
@@ -29,6 +31,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCashOnHand, setEditedCashOnHand] = useState(cashOnHand);
   const [editedArr, setEditedArr] = useState(arr);
+  const navigate = useNavigate();
   
   // Determine styling based on company
   const isGreen = id === 'cactus';
@@ -131,6 +134,18 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
           </Grid>
         </Box>
         
+        <Divider sx={{ my: 2 }} />
+        
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button 
+            variant="outlined" 
+            color={isGreen ? "primary" : "secondary"}
+            size="small"
+            onClick={() => navigate(`/investors/${id}`)}
+          >
+            Manage Investors
+          </Button>
+        </Box>
 
       </CardContent>
     </Card>
