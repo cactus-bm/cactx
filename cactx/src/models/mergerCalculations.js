@@ -41,8 +41,20 @@ export const calculateValuation = (combinedFinancials, scenario) => {
     }   
     valuations.ben = {
       source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
+      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.ben
     }
+    valuations.catx = {
+      source: valuationSource,
+      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.catx
+    }
+    valuations.cactus = {
+      source: valuationSource,
+      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.cactus
+    }
+    valuations.vested = {
+      source: valuationSource,
+      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
+    } 
   }
   valuations.cash = {
     source: 'cash',

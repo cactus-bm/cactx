@@ -69,8 +69,36 @@ const ScenarioResults = ({ scenario, companies }) => {
               <Typography variant="h4">
                 {formatCurrency(results.valuation.merger.valuation)}
               </Typography>
+              <Divider sx={{ my: 1 }} />
+              
+              {/* Individual Company Valuations */}
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 2, mb: 1 }}>
+                Individual Valuations
+              </Typography>
+              
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="secondary.main" sx={{ fontWeight: 'bold' }}>
+                    CatX:
+                  </Typography>
+                  <Typography variant="body1">
+                    {formatCurrency(results.valuation.catx.valuation)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="primary.main" sx={{ fontWeight: 'bold' }}>
+                    Cactus:
+                  </Typography>
+                  <Typography variant="body1">
+                    {formatCurrency(results.valuation.cactus.valuation)}
+                  </Typography>
+                </Grid>
+              </Grid>
+              
+              <Divider sx={{ my: 1 }} />
+              
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                With Ben Vested: {formatCurrency(results.valuation.ben.valuation)}
+                With Ben Vested: {formatCurrency(results.valuation.vested.valuation)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Cash on Hand: {formatCurrency(results.valuation.cash.valuation)}
