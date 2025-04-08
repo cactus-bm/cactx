@@ -15,7 +15,7 @@ const OwnershipStructure = ({ data, onChange }) => {
   // Ensure the initial values are within bounds
   const { catx = 0, cactus = 0, ben = 0 } = data;
   
-  // Handler for adjusting all three values to ensure they sum to 100%
+  // Handler for adjusting values to ensure they sum to 100%
   const adjustValues = (field, newValue) => {
     // Get current values
     const current = { ...data };
@@ -31,28 +31,38 @@ const OwnershipStructure = ({ data, onChange }) => {
       // Find the other two fields
       const otherFields = Object.keys(current).filter(key => key !== field);
       
-      // Calculate proportions of the other fields
-      const otherTotal = otherFields.reduce((sum, key) => sum + current[key], 0);
+      // First, try to adjust only the last field (the one we haven't touched)
+      // Determine which field to adjust (last field that wasn't changed)
+      const fieldOrder = ['catx', 'cactus', 'ben'];
+      const lastField = fieldOrder.filter(f => f !== field).pop();
       
-      if (otherTotal > 0) {
-        // Adjust the other fields proportionally
-        otherFields.forEach(key => {
-          const proportion = current[key] / otherTotal;
-          current[key] = Math.max(0, current[key] - excess * proportion);
-          // Round to integers
-          current[key] = Math.round(current[key]);
-        });
-        
-        // Final adjustment to ensure sum is exactly 100
-        const finalTotal = Object.values(current).reduce((sum, val) => sum + val, 0);
-        if (finalTotal !== 100) {
-          // Add/subtract the difference from the largest other field
-          const largestField = otherFields.reduce((a, b) => current[a] > current[b] ? a : b);
-          current[largestField] += (100 - finalTotal);
-        }
+      // Check if last field has room for adjustment
+      if (current[lastField] - excess >= 0 || excess < 0) {
+        // Last field can accommodate the change
+        current[lastField] = Math.max(0, current[lastField] - excess);
+        current[lastField] = Math.round(current[lastField]);
       } else {
-        // If other fields are already 0, adjust the current field
-        current[field] = 100;
+        // Last field would go negative, so we need to distribute among other fields
+        // Sort other fields by size (descending)
+        const sortedFields = otherFields.sort((a, b) => current[b] - current[a]);
+        
+        // First, take as much as possible from the last field
+        const remainingExcess = excess - current[lastField];
+        current[lastField] = 0;
+        
+        // Then, take the rest from the middle field
+        const middleField = sortedFields[0];
+        current[middleField] = Math.max(0, current[middleField] - remainingExcess);
+        current[middleField] = Math.round(current[middleField]);
+      }
+      
+      // Final adjustment to ensure sum is exactly 100
+      const finalTotal = Object.values(current).reduce((sum, val) => sum + val, 0);
+      if (finalTotal !== 100) {
+        // Add/subtract the difference from the field we're adjusting
+        const adjustField = current[lastField] > 0 ? lastField : 
+                           otherFields.find(f => current[f] > 0) || field;
+        current[adjustField] += (100 - finalTotal);
       }
     }
     
