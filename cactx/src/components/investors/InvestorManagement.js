@@ -111,9 +111,11 @@ const InvestorManagement = ({ companyId }) => {
   };
   
   const handleSaveInvestor = () => {
-    // Create a copy of the current investors
+    // Create a DEEP copy of the current investors object with all arrays
     const updatedInvestors = {
-      ...company.investors
+      equity: [...company.investors.equity],
+      safe: [...company.investors.safe],
+      employees: [...company.investors.employees]
     };
     
     if (currentInvestor) {
@@ -122,41 +124,59 @@ const InvestorManagement = ({ companyId }) => {
       
       if (index !== -1) {
         if (investorType === 'equity') {
-          updatedInvestors.equity[index] = {
-            name: formData.name,
-            percentage: formData.percentage
-          };
+          // Create a new array with the updated item
+          updatedInvestors.equity = updatedInvestors.equity.map((item, idx) => 
+            idx === index ? {
+              name: formData.name,
+              percentage: formData.percentage
+            } : item
+          );
         } else if (investorType === 'safe') {
-          updatedInvestors.safe[index] = {
-            name: formData.name,
-            amount: formData.amount,
-            cap: formData.cap
-          };
+          // Create a new array with the updated item
+          updatedInvestors.safe = updatedInvestors.safe.map((item, idx) => 
+            idx === index ? {
+              name: formData.name,
+              amount: formData.amount,
+              cap: formData.cap
+            } : item
+          );
         } else if (investorType === 'employees') {
-          updatedInvestors.employees[index] = {
-            name: formData.name,
-            allocated: formData.allocated 
-          };
+          // Create a new array with the updated item
+          updatedInvestors.employees = updatedInvestors.employees.map((item, idx) => 
+            idx === index ? {
+              name: formData.name,
+              allocated: formData.allocated 
+            } : item
+          );
         }
       }
     } else {
       // Add new investor
       if (investorType === 'equity') {
-        updatedInvestors.equity.push({
-          name: formData.name,
-          percentage: formData.percentage
-        });
+        updatedInvestors.equity = [
+          ...updatedInvestors.equity,
+          {
+            name: formData.name,
+            percentage: formData.percentage
+          }
+        ];
       } else if (investorType === 'safe') {
-        updatedInvestors.safe.push({
-          name: formData.name,
-          amount: formData.amount,
-          cap: formData.cap
-        });
+        updatedInvestors.safe = [
+          ...updatedInvestors.safe,
+          {
+            name: formData.name,
+            amount: formData.amount,
+            cap: formData.cap
+          }
+        ];
       } else if (investorType === 'employees') {
-        updatedInvestors.employees.push({
-          name: formData.name,
-          allocated: formData.allocated
-        });
+        updatedInvestors.employees = [
+          ...updatedInvestors.employees,
+          {
+            name: formData.name,
+            allocated: formData.allocated
+          }
+        ];
       }
     }
     
@@ -172,19 +192,23 @@ const InvestorManagement = ({ companyId }) => {
   };
   
   const handleDeleteInvestor = (type, investorName) => {
-      const updatedInvestors = {
-        ...company.investors
-      };
-      
-      updatedInvestors[type] = updatedInvestors[type].filter(inv => inv.name !== investorName);
-      
-      // Update state in Redux
-      dispatch(updateCompanyData({
-        id: companyId,
-        data: {
-          investors: updatedInvestors
-        }
-      }));
+    // Create a DEEP copy of the current investors object with all arrays
+    const updatedInvestors = {
+      equity: [...company.investors.equity],
+      safe: [...company.investors.safe],
+      employees: [...company.investors.employees]
+    };
+    
+    // Remove investor from the list using a new array
+    updatedInvestors[type] = updatedInvestors[type].filter(investor => investor.name !== investorName);
+    
+    // Update state in Redux
+    dispatch(updateCompanyData({
+      id: companyId,
+      data: {
+        investors: updatedInvestors
+      }
+    }));
   };
   
   // Calculate total equity percentage
