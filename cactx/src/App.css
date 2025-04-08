@@ -1,0 +1,89 @@
+/* Base styling for Cactx Merger Modeling Application */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 64px);
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Card styling */
+.card {
+  margin-bottom: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Dashboard grid layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Form styling */
+.form-section {
+  margin-bottom: 32px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Chart container styling */
+.chart-container {
+  height: 300px;
+  margin-bottom: 24px;
+}
+
+/* Company styles */
+.catx-color {
+  color: #1976d2;
+}
+
+.cactus-color {
+  color: #2e7d32;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
