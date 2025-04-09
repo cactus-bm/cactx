@@ -129,7 +129,6 @@ const InvestorDistributionList = ({ investors, valuation, title = "Investor Dist
           </TableHead>
           <TableBody>
             {sortedInvestors.map((investor, index) => {
-              console.log(investor);
               if (investor.investors.length > 1) {
                 return (<>
                 <TableRow key={`${investor.name}-${index}`} hover>
