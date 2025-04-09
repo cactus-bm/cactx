@@ -87,12 +87,10 @@ const ScenarioCombined = ({ scenario }) => {
           <Grid item xs={12}>
             <Card variant="outlined">
               <CardContent>
-                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
-                  <InvestorList
-                    investors={sortedInvestors}
-                    valuation={totalValuation}
-                  />
-                </Box>
+                <InvestorList
+                  investors={sortedInvestors}
+                  valuation={totalValuation}
+                />
               </CardContent>
             </Card>
           </Grid>

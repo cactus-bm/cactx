@@ -289,25 +289,6 @@ const ReportGenerator = () => {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<DescriptionIcon />}
-                  onClick={generateReport}
-                  disabled={!selectedScenario}
-                  sx={{ mr: 2 }}
-                >
-                  Preview Report
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PictureAsPdfIcon />}
-                  onClick={generatePdf}
-                  disabled={!selectedScenario}
-                >
-                  Generate PDF
-                </Button>
               </Grid>
             </Grid>
           </Paper>
@@ -378,16 +359,15 @@ const ReportGenerator = () => {
                 />
                 
                 <Box sx={{ mt: 4, textAlign: 'center' }}>
-                  <Button 
-                    variant="contained" 
-                    color="primary"
-                    sx={{ px: 4 }}
-                  >
-                    Download PDF
-                  </Button>
-                  <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                    (Download functionality would be implemented in a production version)
-                  </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PictureAsPdfIcon />}
+                  onClick={generatePdf}
+                  disabled={!selectedScenario}
+                >
+                  Generate PDF
+                </Button>
                 </Box>
               </Paper>
             </div>
