@@ -25,7 +25,7 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <div className="App">
             <AppHeader />
             <div className="app-container">
