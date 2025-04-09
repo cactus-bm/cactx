@@ -118,6 +118,10 @@ export const companiesSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    addCompany: (state, action) => {
+      // Add a new company to the companies array
+      state.companies.push(action.payload);
+    },
   },
 });
 
@@ -126,6 +130,7 @@ export const {
   setCompanies,
   setLoading,
   setError,
+  addCompany,
 } = companiesSlice.actions;
 
 export const selectCompanies = (state) => state.companies.companies;

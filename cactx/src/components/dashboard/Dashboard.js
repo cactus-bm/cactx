@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { addCompany } from '../../store/companiesSlice';
 import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 import { 
   Typography, 
   Box, 
@@ -11,9 +13,14 @@ import {
   Button,
   Stack,
   Divider,
-  Paper
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  InputAdornment
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies, updateCompanyData } from '../../store/companiesSlice';
@@ -23,10 +30,83 @@ import CompanyCard from './CompanyCard';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  
+  // State for new company dialog
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [newCompany, setNewCompany] = useState({
+    name: '',
+    id: '',
+    cashOnHand: 0,
+    arr: 0,
+    investors: {
+      equity: [],
+      employees: [],
+      safe: []
+    }
+  });
   const dispatch = useDispatch();
   const scenarios = useSelector(selectScenarios);
   const companies = useSelector(selectCompanies);
   
+  // Open dialog for creating a new company
+  const handleOpenDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // Close dialog for creating a new company
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    // Reset form
+    setNewCompany({
+      name: '',
+      id: '',
+      cashOnHand: 0,
+      arr: 0
+    });
+  };
+
+  // Handle input changes for new company form
+  const handleInputChange = (field) => (event) => {
+    let value = event.target.value;
+    
+    // Format numbers for financial fields
+    if (field === 'cashOnHand' || field === 'arr') {
+      value = parseInt(value.replace(/[^0-9]/g, ''), 10) || 0;
+    }
+    
+    // Auto-generate ID from name (lowercase, no spaces)
+    if (field === 'name') {
+      setNewCompany(prev => ({
+        ...prev,
+        [field]: value,
+        id: value.toLowerCase().replace(/\s+/g, '')
+      }));
+    } else {
+      setNewCompany(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
+  };
+
+  // Create a new company
+  const handleCreateCompany = () => {
+    // Create a new company object with default metrics
+    const company = {
+      ...newCompany,
+      metrics: {
+        valuation: newCompany.arr * 10, // Simple valuation calculation
+        growthRate: 10,
+        employees: 50,
+        offices: 1
+      }
+    };
+    
+    // Add the new company to the store
+    dispatch(addCompany(company));
+    handleCloseDialog();
+  };
+
   const handleUpdateCompany = (id, data) => {
     dispatch(updateCompanyData({ id, data }));
   };
@@ -62,9 +142,19 @@ const Dashboard = () => {
       
       <DashboardSummary scenarios={scenarios} />
       
-      <Typography variant="h5" component="h2" sx={{ mt: 4, mb: 2 }}>
-        Company Profiles
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4, mb: 2 }}>
+        <Typography variant="h5" component="h2">
+          Company Profiles
+        </Typography>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          startIcon={<AddIcon />}
+          onClick={handleOpenDialog}
+        >
+          New Company
+        </Button>
+      </Box>
       
       <Grid container spacing={3}>
         {companies.map(company => (
@@ -135,6 +225,71 @@ const Dashboard = () => {
           </Button>
         </Paper>
       )}
+      
+      {/* Dialog for creating a new company */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>Create New Company</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Company Name"
+            fullWidth
+            variant="outlined"
+            value={newCompany.name}
+            onChange={handleInputChange('name')}
+            sx={{ mb: 3, mt: 1 }}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Company ID"
+            fullWidth
+            variant="outlined"
+            value={newCompany.id}
+            onChange={handleInputChange('id')}
+            helperText="Auto-generated from name. Used as internal identifier."
+            sx={{ mb: 3 }}
+            disabled
+          />
+          <TextField
+            margin="dense"
+            label="Cash on Hand"
+            fullWidth
+            variant="outlined"
+            value={newCompany.cashOnHand}
+            onChange={handleInputChange('cashOnHand')}
+            sx={{ mb: 3 }}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+            type="number"
+          />
+          <TextField
+            margin="dense"
+            label="Annual Recurring Revenue"
+            fullWidth
+            variant="outlined"
+            value={newCompany.arr}
+            onChange={handleInputChange('arr')}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+            type="number"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button 
+            onClick={handleCreateCompany} 
+            variant="contained" 
+            color="primary"
+            disabled={!newCompany.name}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
