@@ -22,15 +22,14 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
 
 /**
  * Perform valuation of the combined entity
- * @param {Object} combinedFinancials - Financial metrics of combined entity
  * @param {Object} scenario - Merger scenario configuration
  * @returns {Object} Valuation metrics
  */
-export const calculateValuation = (combinedFinancials, scenario) => {
+export const calculateValuation = (scenario) => {
   const ownership = scenario.ownership
   // Get the company with the highest valuation to use as the source
   const valuationSource = Object.keys(scenario.valuation || {})
-    .filter(key => key !== 'merger' && key !== 'cash')
+    .filter(key => key !== 'merger')
     .reduce((highest, company) => 
       (scenario.valuation[company] > (scenario.valuation[highest] || 0)) ? company : highest, 
       'catx');
@@ -44,9 +43,5 @@ export const calculateValuation = (combinedFinancials, scenario) => {
     source: valuationSource,
     valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
   }   
-  valuations.cash = {
-    source: 'cash',
-    valuation: combinedFinancials.cashOnHand
-  }
   return valuations;
 };

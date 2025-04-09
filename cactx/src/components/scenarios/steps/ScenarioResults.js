@@ -24,8 +24,6 @@ const formatCurrency = (value) => {
 };
 
 const ScenarioResults = ({ scenario, companies }) => {
-  const catx = companies.find(c => c.id === 'catx');
-  const cactus = companies.find(c => c.id === 'cactus');
   
   // Get results from scenario
   const { results } = scenario;
@@ -88,12 +86,6 @@ const ScenarioResults = ({ scenario, companies }) => {
                 </Grid>
                 ))}
               </Grid>
-              
-              <Divider sx={{ my: 1 }} />
-              
-              <Typography variant="body2" color="text.secondary">
-                Cash on Hand: {formatCurrency(results.valuation.cash.valuation)}
-              </Typography>
             </Box>
           </Paper>
         </Grid>

@@ -60,8 +60,8 @@ const newScenario = () => ({
       cactus: 80,
     },
     valuationAssumptions: {
-      catxValuation: 0,
-      cactusValuation: 25e6
+      catx: 0,
+      cactus: 25e6
     },
     results: null
   })
@@ -99,25 +99,10 @@ const ScenarioBuilder = () => {
   // Calculate results whenever relevant inputs change
   useEffect(() => {
     if (companies.length >= 2 && scenarioData) {
-      const catx = companies.find(c => c.id === 'catx');
-      const cactus = companies.find(c => c.id === 'cactus');
-      
-      if (catx && cactus) {
-        // Calculate combined financials and metrics
-        const combinedFinancials = calculateCombinedFinancials(
-          catx, 
-          cactus, 
-          {} // Using default values in the calculation function
-        );
-        
         // Use valuation from user input if available
         const valuation = calculateValuation(
-          combinedFinancials,
           {
-            valuation: {
-              catx: scenarioData.valuationAssumptions?.catxValuation,
-              cactus: scenarioData.valuationAssumptions?.cactusValuation,
-            },
+            valuation: scenarioData.valuationAssumptions,
             ownership: scenarioData.ownership
           }
         );
@@ -126,12 +111,10 @@ const ScenarioBuilder = () => {
         setScenarioData(prev => ({
           ...prev,
           results: {
-            combinedFinancials,
             valuation,
           }
         }));
       }
-    }
   }, [
     companies, 
     scenarioData?.ownership,
