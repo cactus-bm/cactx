@@ -56,9 +56,8 @@ const newScenario = () => ({
     },
     createdAt: new Date().toISOString(),
     ownership: {
-      catx: 12,
+      catx: 20,
       cactus: 80,
-      ben: 8
     },
     valuationAssumptions: {
       catxValuation: 0,
@@ -201,6 +200,7 @@ const ScenarioBuilder = () => {
           <OwnershipStructure 
             data={scenarioData.ownership} 
             onChange={(field, value) => handleChange('ownership', field, value)} 
+            companies={companies}
           />
         );
       case 2:

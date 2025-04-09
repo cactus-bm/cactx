@@ -186,15 +186,7 @@ const Dashboard = () => {
                     <Typography variant="body2">
                       {"Ownership:"} 
                     </Typography>
-                    <Typography variant="body2">
-                      {scenario.ownership?.catx > 0 ? `CatX (${scenario.ownership.catx}%) ` : ''}
-                    </Typography>
-                    <Typography variant="body2">
-                      {scenario.ownership?.cactus > 0 ? `Cactus (${scenario.ownership.cactus}%) ` : ''}
-                    </Typography>
-                    <Typography variant="body2">
-                      {scenario.ownership?.ben > 0 ? `Ben (${scenario.ownership.ben}%)` : ''}
-                    </Typography>
+                    {companies.map(c => <Typography key={c.id} variant="body2">{scenario.ownership?.[c.id] > 0 ? `${c.name} (${scenario.ownership[c.id]}%) ` : ''}</Typography>)}
                     </Stack>
                   </CardContent>
                   <CardActions>

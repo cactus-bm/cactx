@@ -115,32 +115,17 @@ const ScenarioResults = ({ scenario, companies }) => {
             <Divider sx={{ my: 2 }} />
             
             <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  CatX
-                </Typography>
-                <Typography variant="h5" color="secondary.main">
-                  {scenario.ownership.catx}%
-                </Typography>
-              </Grid>
+              {companies.map(c => (
+                <Grid item xs={4} key={c.id}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {c.name}
+                  </Typography>
+                  <Typography variant="h5" color={c.id === 'catx' ? 'secondary.main' : 'primary.main'}>
+                    {scenario.ownership[c.id]}%
+                  </Typography>
+                </Grid>
+              ))} 
               
-              <Grid item xs={4}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Cactus
-                </Typography>
-                <Typography variant="h5" color="primary.main">
-                  {scenario.ownership.cactus}%
-                </Typography>
-              </Grid>
-              
-              <Grid item xs={4}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Ben Earnout
-                </Typography>
-                <Typography variant="h5" color="warning.main">
-                  {scenario.ownership.ben}%
-                </Typography>
-              </Grid>
             </Grid>
             
             <Box sx={{ mt: 3 }}>

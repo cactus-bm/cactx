@@ -235,9 +235,7 @@ const ReportGenerator = () => {
                     </Typography>
                     <Typography variant="body1" paragraph>
                       <strong>Ownership Structure:</strong> 
-                      {scenarioObject.ownership?.catx > 0 ? `CatX (${scenarioObject.ownership.catx}%) ` : ''}
-                      {scenarioObject.ownership?.cactus > 0 ? `Cactus (${scenarioObject.ownership.cactus}%) ` : ''}
-                      {scenarioObject.ownership?.ben > 0 ? `Ben (${scenarioObject.ownership.ben}%)` : ''}
+                      {companies.map(c => scenarioObject.ownership?.[c.id] > 0 ? `${c.name} (${scenarioObject.ownership[c.id]}%) ` : '')}
                     </Typography>
                     <Divider sx={{ my: 3 }} />
                   </>

@@ -11,9 +11,7 @@ import {
 } from '@mui/material';
 import OwnershipChart from '../../visualizations/OwnershipChart';
 
-const OwnershipStructure = ({ data, onChange }) => {
-  // Ensure the initial values are within bounds
-  const { catx = 0, cactus = 0, ben = 0 } = data;
+const OwnershipStructure = ({ data, onChange, companies }) => {
   
   // Handler for adjusting values to ensure they sum to 100%
   const adjustValues = (field, newValue) => {
@@ -33,7 +31,7 @@ const OwnershipStructure = ({ data, onChange }) => {
       
       // First, try to adjust only the last field (the one we haven't touched)
       // Determine which field to adjust (last field that wasn't changed)
-      const fieldOrder = ['catx', 'cactus', 'ben'];
+      const fieldOrder = ['catx', 'cactus'];
       const lastField = fieldOrder.filter(f => f !== field).pop();
       
       // Check if last field has room for adjustment
@@ -73,36 +71,14 @@ const OwnershipStructure = ({ data, onChange }) => {
   };
   
   // Change handlers for each owner
-  const handleCatXChange = (event, newValue) => {
-    adjustValues('catx', newValue);
+  const handleChange = (event, newValue) => {
+    adjustValues(event.name, newValue);
   };
   
-  const handleCactusChange = (event, newValue) => {
-    adjustValues('cactus', newValue);
-  };
-  
-  const handleBenChange = (event, newValue) => {
-    adjustValues('ben', newValue);
-  };
-  
-  const handleCatXInputChange = (event) => {
+  const handleInputChange = (id, event) => {
     const value = Math.min(100, Math.max(0, Number(event.target.value)));
     if (!isNaN(value)) {
-      adjustValues('catx', value);
-    }
-  };
-  
-  const handleCactusInputChange = (event) => {
-    const value = Math.min(100, Math.max(0, Number(event.target.value)));
-    if (!isNaN(value)) {
-      adjustValues('cactus', value);
-    }
-  };
-  
-  const handleBenInputChange = (event) => {
-    const value = Math.min(100, Math.max(0, Number(event.target.value)));
-    if (!isNaN(value)) {
-      adjustValues('ben', value);
+      adjustValues(id, value);
     }
   };
   
@@ -116,15 +92,16 @@ const OwnershipStructure = ({ data, onChange }) => {
       </Typography>
       
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, bgcolor: 'secondary.light', color: 'white' }}>
-            <Typography variant="h6" gutterBottom>
-              CatX Ownership
-            </Typography>
+        {companies.map(company => (
+          <Grid item xs={12} md={4} key={company.id}>
+            <Paper sx={{ p: 3, bgcolor: 'secondary.light', color: 'white' }}>
+              <Typography variant="h6" gutterBottom>
+                {company.name} Ownership
+              </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
               <TextField
-                value={data.catx}
-                onChange={handleCatXInputChange}
+                value={data[company.id]}
+                onChange={(e) => handleInputChange(company.id, e)}
                 variant="outlined"
                 size="small"
                 sx={{ 
@@ -148,8 +125,8 @@ const OwnershipStructure = ({ data, onChange }) => {
               />
             </Box>
             <Slider
-              value={data.catx}
-              onChange={handleCatXChange}
+              value={data[company.id]}
+              onChange={(e) => handleChange(company.id, e.target.value)}
               aria-labelledby="catx-ownership-slider"
               valueLabelDisplay="auto"
               step={1}
@@ -167,110 +144,7 @@ const OwnershipStructure = ({ data, onChange }) => {
             />
           </Paper>
         </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, bgcolor: 'primary.light', color: 'white' }}>
-            <Typography variant="h6" gutterBottom>
-              Cactus Ownership
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-              <TextField
-                value={data.cactus}
-                onChange={handleCactusInputChange}
-                variant="outlined"
-                size="small"
-                sx={{ 
-                  width: '100px', 
-                  input: { color: 'white', textAlign: 'center' },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
-                    '&:hover fieldset': { borderColor: 'white' },
-                    '&.Mui-focused fieldset': { borderColor: 'white' },
-                  }
-                }}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end" sx={{ color: 'white' }}>%</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                  max: 100,
-                  type: 'number',
-                  'aria-labelledby': 'cactus-ownership-input',
-                }}
-              />
-            </Box>
-            <Slider
-              value={data.cactus}
-              onChange={handleCactusChange}
-              aria-labelledby="cactus-ownership-slider"
-              valueLabelDisplay="auto"
-              step={1}
-              min={0}
-              max={100}
-              sx={{
-                color: 'white',
-                '& .MuiSlider-thumb': {
-                  backgroundColor: 'white',
-                },
-                '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                }
-              }}
-            />
-          </Paper>
-        </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, bgcolor: 'warning.light', color: 'white' }}>
-            <Typography variant="h6" gutterBottom>
-              Ben Earnout
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-              <TextField
-                value={data.ben}
-                onChange={handleBenInputChange}
-                variant="outlined"
-                size="small"
-                sx={{ 
-                  width: '100px', 
-                  input: { color: 'white', textAlign: 'center' },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
-                    '&:hover fieldset': { borderColor: 'white' },
-                    '&.Mui-focused fieldset': { borderColor: 'white' },
-                  }
-                }}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end" sx={{ color: 'white' }}>%</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                  max: 100,
-                  type: 'number',
-                  'aria-labelledby': 'ben-ownership-input',
-                }}
-              />
-            </Box>
-            <Slider
-              value={data.ben}
-              onChange={handleBenChange}
-              aria-labelledby="ben-ownership-slider"
-              valueLabelDisplay="auto"
-              step={1}
-              min={0}
-              max={100}
-              sx={{
-                color: 'white',
-                '& .MuiSlider-thumb': {
-                  backgroundColor: 'white',
-                },
-                '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                }
-              }}
-            />
-          </Paper>
-        </Grid>
+        ))}
         
         <Grid item xs={12}>
           <Paper sx={{ p: 3 }}>

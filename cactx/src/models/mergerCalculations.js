@@ -27,33 +27,22 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
  * @returns {Object} Valuation metrics
  */
 export const calculateValuation = (combinedFinancials, scenario) => {
-  const valuations = {}
   const ownership = scenario.ownership
-  
-  if (scenario.valuation.catx > 0 || scenario.valuation.cactus > 0) {
-    const valuationSource = scenario.valuation.catx > 0 ? 'catx' : 'cactus';
-
-    valuations.merger = {
-      source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * (ownership.catx + ownership.cactus)
-    }   
-    valuations.ben = {
-      source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.ben
-    }
-    valuations.catx = {
-      source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.catx
-    }
-    valuations.cactus = {
-      source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * ownership.cactus
-    }
-    valuations.vested = {
-      source: valuationSource,
-      valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
-    } 
+  const valuationSource = scenario.valuation.catx > 0 ? 'catx' : 'cactus';
+  const valuations = {
+    ...Object.entries(ownership).map(([company, percentage]) => ({
+      [company]: { source: company, valuation: scenario.valuation[company] / ownership[valuationSource] * percentage }
+    }))
   }
+  
+  valuations.merger = {
+    source: valuationSource,
+    valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * (ownership.catx + ownership.cactus)
+  }   
+  valuations.vested = {
+    source: valuationSource,
+    valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
+  } 
   valuations.cash = {
     source: 'cash',
     valuation: combinedFinancials.cashOnHand
