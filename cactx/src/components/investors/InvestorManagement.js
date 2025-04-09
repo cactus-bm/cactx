@@ -56,7 +56,8 @@ const InvestorManagement = ({ companyId }) => {
     percentage: 0,
     amount: 0,
     cap: 0,
-    allocated: 0
+    allocated: 0,
+    discount: 0
   });
   
   // Handle opening the dialog for adding/editing investors
@@ -71,17 +72,19 @@ const InvestorManagement = ({ companyId }) => {
         percentage: type === 'equity' ? investor.percentage : 0,
         amount: type === 'safe' ? investor.amount : 0,
         cap: type === 'safe' && investor.cap ? investor.cap : 0,
-        allocated: type === 'employees' ? investor.allocated : 0
+        allocated: type === 'employees' ? investor.allocated : 0,
+        discount: type === 'safe' ? investor.discount : 0
       });
     } else {
       // Adding new investor
       setCurrentInvestor(null);
       setFormData({
         name: '',
-        percentage: type === 'equity' ? 0 : 0,
-        amount: type === 'safe' ? 0 : 0,
-        cap: type === 'safe' ? 0 : 0,
-        allocated: 0
+        percentage: 0,
+        amount: 0,
+        cap: 0,
+        allocated: 0,
+        discount: 0
       });
     }
     
@@ -96,7 +99,7 @@ const InvestorManagement = ({ companyId }) => {
     const { name, value } = e.target;
     
     let processedValue = value;
-    if (name === 'percentage') {
+    if (name === 'percentage' || name === 'discount') {
       // Convert percentage to decimal (0-1)
       processedValue = parseFloat(value) / 100;
     } else if (name === 'amount' || name === 'cap' || name === 'allocated') {
@@ -542,6 +545,25 @@ const InvestorManagement = ({ companyId }) => {
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
+                        label="Valuation Discount"
+                        name="percentage"
+                        type="number"
+                        InputProps={{
+                          endAdornment: '%'
+                        }}
+                        value={formData.discount * 100}
+                        onChange={handleInputChange}
+                        inputProps={{ 
+                          min: 0, 
+                          max: 100, 
+                          step: 0.1 
+                        }}
+                        helperText="The discount applied to the valuation before the cap is applied."
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
                         label="Valuation Cap"
                         name="cap"
                         value={formData.cap}
@@ -549,7 +571,7 @@ const InvestorManagement = ({ companyId }) => {
                         InputProps={{
                           startAdornment: <InputAdornment position="start">$</InputAdornment>,
                         }}
-                        helperText="The maximum company valuation at which the SAFE converts to equity"
+                        helperText="The maximum company valuation at which the SAFE converts to equity."
                       />
                     </Grid>
                   </>
