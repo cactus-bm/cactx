@@ -80,108 +80,6 @@ const ReportGenerator = () => {
     });
   };
   
-  // Generate PDF report
-  const generatePdf = async () => {
-    if (!selectedScenario) {
-      setAlertMessage('Please select a scenario first');
-      setShowAlert(true);
-      return;
-    }
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const title = reportTitle || `Merger Scenario Report - ${scenarioObject.basicInfo.name}`;
-    
-    // Add title
-    pdf.setFontSize(18);
-    pdf.text(title, 105, 15, { align: 'center' });
-    pdf.setFontSize(12);
-    
-    let yPos = 30;
-    
-    // Add basic info section
-    if (selectedSections.basicInfo && scenarioObject) {
-      pdf.setFontSize(14);
-      pdf.text('Basic Information', 14, yPos);
-      pdf.setFontSize(12);
-      yPos += 10;
-      
-      pdf.text(`Scenario Name: ${scenarioObject.basicInfo.name}`, 14, yPos);
-      yPos += 7;
-      
-      if (scenarioObject.basicInfo.description) {
-        pdf.text('Description:', 14, yPos);
-        yPos += 7;
-        const splitDescription = pdf.splitTextToSize(scenarioObject.basicInfo.description, 180);
-        pdf.text(splitDescription, 14, yPos);
-        yPos += splitDescription.length * 7;
-      }
-      
-      yPos += 10;
-    }
-    
-
-    // Capture and add ScenarioCompanies
-    if (reportRef.current && scenarioObject) {
-      pdf.setFontSize(14);
-      pdf.text('Company Ownership', 14, yPos);
-      pdf.setFontSize(12);
-      yPos += 10;
-      
-      try {
-        const canvas = await html2canvas(reportRef.current, {
-          scale: 2,
-          logging: false,
-          useCORS: true
-        });
-        
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 180;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        
-        // Check if we need a new page
-        if (yPos + imgHeight > 280) {
-          pdf.addPage();
-          yPos = 20;
-        }
-        
-        pdf.addImage(imgData, 'PNG', 14, yPos, imgWidth, imgHeight);
-        yPos += imgHeight + 10;
-      } catch (err) {
-        console.error('Error capturing Companies component:', err);
-      }
-    }
-    
-    // Add recommendations if selected
-    if (selectedSections.recommendations && recommendations) {
-      // Check if we need a new page
-      if (yPos > 230) {
-        pdf.addPage();
-        yPos = 20;
-      }
-      
-      pdf.setFontSize(14);
-      pdf.text('Recommendations', 14, yPos);
-      pdf.setFontSize(12);
-      yPos += 10;
-      
-      const splitRecommendations = pdf.splitTextToSize(recommendations, 180);
-      pdf.text(splitRecommendations, 14, yPos);
-    }
-    
-    // Save the PDF
-    pdf.save(`${title.replace(/\s+/g, '_')}.pdf`);
-    
-    setAlertMessage('PDF report generated successfully!');
-    setShowAlert(true);
-  };
-  
-  // Generate report preview
-  const generateReport = () => {
-    if (reportRef.current) {
-      reportRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-  
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -311,14 +209,12 @@ const ReportGenerator = () => {
                   p: 4, 
                   mb: 4,
                   ...(fullScreenMode && {
-                    position: 'fixed',
+                    position: 'absolute',
                     top: 0,
                     left: 0,
                     right: 0,
-                    bottom: 0,
                     zIndex: 1300,
                     borderRadius: 0,
-                    overflowY: 'auto'
                   })
                 }} 
               >
@@ -382,17 +278,6 @@ const ReportGenerator = () => {
                   companies={companies}
                 />
                 
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PictureAsPdfIcon />}
-                  onClick={generatePdf}
-                  disabled={!selectedScenario}
-                >
-                  Generate PDF
-                </Button>
-                </Box>
               </Paper>
             </div>
           )}
