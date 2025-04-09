@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   companies: [
     {
-      id: 'catx',
-      name: 'CatX',
+      id: 'company_a',
+      name: 'Company A',
       cashOnHand: 800000,
       arr: 250000,
       metrics: {
@@ -48,8 +48,8 @@ const initialState = {
       }
     },
     {
-      id: 'cactus',
-      name: 'Cactus',
+      id: 'company_b',
+      name: 'Company B',
       cashOnHand: 950000,
       arr: 320000,
       metrics: {
