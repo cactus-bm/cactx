@@ -30,6 +30,9 @@ import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies } from '../../store/companiesSlice';
 import ScenarioCompanies from '../scenarios/ScenarioCompanies';
 import ScenarioCombined from '../scenarios/ScenarioCombined';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import IconButton from '@mui/material/IconButton';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
@@ -47,6 +50,7 @@ const ReportGenerator = () => {
   const navigate = useNavigate();
   const scenarios = useSelector(selectScenarios);
   const companies = useSelector(selectCompanies);
+  const [fullScreenMode, setFullScreenMode] = useState(false);
   
   const [selectedScenario, setSelectedScenario] = useState('');
   const [reportTitle, setReportTitle] = useState('');
@@ -302,7 +306,27 @@ const ReportGenerator = () => {
                 </Typography>
               </Box>
               
-              <Paper sx={{ p: 4, mb: 4 }}>
+              <Paper 
+                sx={{ 
+                  p: 4, 
+                  mb: 4,
+                  ...(fullScreenMode && {
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 1300,
+                    borderRadius: 0,
+                    overflowY: 'auto'
+                  })
+                }} 
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                  <IconButton onClick={() => setFullScreenMode(!fullScreenMode)}>
+                    {fullScreenMode ? <FullscreenExitIcon /> : <FullscreenIcon />}
+                  </IconButton>
+                </Box>
                 <Typography variant="h4" align="center" gutterBottom>
                   {reportTitle}
                 </Typography>
