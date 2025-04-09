@@ -33,6 +33,8 @@ const ScenarioCompanies = ({ scenario }) => {
   // Get the companies that have ownership in this scenario
   const scenarioCompanies = companies.filter(company => {
     return scenario.ownership[company.id] > 0;
+  }).sort((a, b) => {
+    return scenario.results.valuation[b.id].valuation - scenario.results.valuation[a.id].valuation;
   });
   
   // If no companies have ownership, display a message
