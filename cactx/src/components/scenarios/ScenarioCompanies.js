@@ -45,18 +45,17 @@ const ScenarioCompanies = ({ scenario }) => {
   }
 
   return (
-    <Box sx={{ mt: 3 }}>
-      <Typography variant="h5" gutterBottom>
+    <Box sx={{ mt: 3, height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+      <Typography variant="h6" gutterBottom>
         Company Equity Distributions
       </Typography>
       <Typography variant="body2" color="text.secondary" paragraph>
         Based on scenario: {scenario.basicInfo.name}
       </Typography>
       
-      <Grid container spacing={3}>
-        {scenarioCompanies.map(company => {
-          console.log("scenario")
-          console.log(scenario)
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+        <Grid container spacing={2} direction="column">
+          {scenarioCompanies.map(company => {
           const ownershipPercentage = scenario.ownership[company.id];
           const companyValuation = scenario.results.valuation[company.id].valuation;
           
@@ -89,7 +88,8 @@ const ScenarioCompanies = ({ scenario }) => {
             </Grid>
           );
         })}
-      </Grid>
+        </Grid>
+      </Box>
     </Box>
   );
 };

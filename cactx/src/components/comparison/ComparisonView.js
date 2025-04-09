@@ -161,12 +161,24 @@ const ComparisonView = () => {
                   Comparison Results
                 </Typography>
               </Box>
-              <ScenarioCompanies
-                scenario={scenarioObjects[0]}
-              />
-              <ScenarioCompanies
-                scenario={scenarioObjects[1]}
-              />
+              <Grid container spacing={3} sx={{ width: '100%' }}>
+                <Grid item xs={12} md={6} lg={3}>
+                  <ScenarioCompanies
+                    scenario={scenarioObjects[0]}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={6}>
+                  {/* Middle section for future content */}
+                </Grid>
+                <Grid item xs={12} md={6} lg={6}>
+                  {/* Middle section for future content */}
+                </Grid>
+                <Grid item xs={12} md={6} lg={3}>
+                  <ScenarioCompanies
+                    scenario={scenarioObjects[1]}
+                  />
+                </Grid>
+              </Grid>
             </>
           )}
         </>
