@@ -66,7 +66,7 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
         </Typography>
       </Box>
       
-      <TableContainer component={Paper} variant="outlined">
+      <TableContainer component={Paper} variant="outlined" sx={{ mt: 2, '@media print': { pageBreakBefore: 'auto', breakAfter: 'page' } }}>
         <Table size="small">
           <TableHead>
             <TableRow>

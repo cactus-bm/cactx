@@ -251,32 +251,44 @@ const ReportGenerator = () => {
                       <strong>Ownership Structure:</strong> 
                       {companies.map(c => scenarioObject.ownership?.[c.id] > 0 ? `${c.name} (${scenarioObject.ownership[c.id]}%) ` : '')}
                     </Typography>
-                    <Divider sx={{ my: 3 }} />
                   </>
                 )}
                 
                 {selectedSections.recommendations && recommendations && (
                   <>
+                    <Divider sx={{ my: 3 }} />
                     <Typography variant="h5" gutterBottom>
                       Recommendations
                     </Typography>
                     <Typography variant="body1" paragraph>
                       {recommendations}
                     </Typography>
-                    <Divider sx={{ my: 3 }} />
                   </>
                 )}
+                <Divider sx={{ my: 3, '@media print': { pageBreakAfter: 'always', breakAfter: 'page' } }} />
 
                 <ScenarioCompanies 
                   scenario={scenarioObject}
                   companies={companies}
                 />
-                    <Divider sx={{ my: 3 }} />
+
 
                 <ScenarioCombined 
                   scenario={scenarioObject}
                   companies={companies}
                 />
+                <Box
+  sx={{
+    height: 0,
+    display: 'none',
+    '@media print': {
+      display: 'block',
+      height: '100vh',
+      pageBreakAfter: 'always',
+      breakAfter: 'page'
+    }
+  }}
+/>
                 
               </Paper>
             </div>
