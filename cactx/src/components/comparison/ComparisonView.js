@@ -161,59 +161,6 @@ const ComparisonView = () => {
                   Comparison Results
                 </Typography>
               </Box>
-              
-              <Grid container spacing={4}>
-                {/* Basic Info Comparison */}
-                <Grid item xs={12}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        Basic Information
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2">Feature</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="primary.main">
-                            {scenarioObjects[0].basicInfo.name}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography variant="subtitle2" color="secondary.main">
-                            {scenarioObjects[1].basicInfo.name}
-                          </Typography>
-                        </Grid>
-                        
-                        <Grid item xs={12}>
-                          <Divider />
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Ownership (CatX)</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>{scenarioObjects[0].ownership?.catx || 0}%</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>{scenarioObjects[1].ownership?.catx || 0}%</Typography>
-                        </Grid>
-                        
-                        <Grid item xs={4}>
-                          <Typography>Ownership (Cactus)</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>{scenarioObjects[0].ownership?.cactus || 0}%</Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography>{scenarioObjects[1].ownership?.cactus || 0}%</Typography>
-                        </Grid>
-                        
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
             </>
           )}
         </>
