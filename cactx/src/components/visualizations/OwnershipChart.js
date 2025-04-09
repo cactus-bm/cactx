@@ -7,7 +7,6 @@ import { Box } from '@mui/material';
  * @param {Object} props.ownership - Ownership percentages object with catx, cactus, and ben properties
  */
 const OwnershipChart = ({ ownership }) => {
-  console.log(ownership)
   return (
     <Box sx={{ p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
       <Box sx={{ 

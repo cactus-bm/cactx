@@ -30,8 +30,6 @@ export const calculateValuation = (combinedFinancials, scenario) => {
   const valuations = {}
   const ownership = scenario.ownership
   
-  console.log(scenario)
-
   if (scenario.valuation.catx > 0 || scenario.valuation.cactus > 0) {
     const valuationSource = scenario.valuation.catx > 0 ? 'catx' : 'cactus';
 
