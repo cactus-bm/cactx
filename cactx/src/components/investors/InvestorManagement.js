@@ -73,7 +73,7 @@ const InvestorManagement = ({ companyId }) => {
         amount: type === 'safe' ? investor.amount : 0,
         cap: type === 'safe' && investor.cap ? investor.cap : 0,
         allocated: type === 'employees' ? investor.allocated : 0,
-        discount: type === 'safe' ? investor.discount : 0
+        discount: type === 'safe' && investor.discount ? investor.discount : 0
       });
     } else {
       // Adding new investor
@@ -106,7 +106,6 @@ const InvestorManagement = ({ companyId }) => {
       // Convert to number
       processedValue = parseFloat(value);
     }
-    
     setFormData({
       ...formData,
       [name]: processedValue
@@ -140,7 +139,8 @@ const InvestorManagement = ({ companyId }) => {
             idx === index ? {
               name: formData.name,
               amount: formData.amount,
-              cap: formData.cap
+              cap: formData.cap,
+              discount: formData.discount
             } : item
           );
         } else if (investorType === 'employees') {
@@ -169,7 +169,8 @@ const InvestorManagement = ({ companyId }) => {
           {
             name: formData.name,
             amount: formData.amount,
-            cap: formData.cap
+            cap: formData.cap,
+            discount: formData.discount
           }
         ];
       } else if (investorType === 'employees') {
@@ -330,6 +331,7 @@ const InvestorManagement = ({ companyId }) => {
                   <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell align="right">Investment Amount</TableCell>
+                    <TableCell align="right">Valuation Discount</TableCell>
                     <TableCell align="right">Valuation Cap</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
@@ -339,6 +341,7 @@ const InvestorManagement = ({ companyId }) => {
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
                       <TableCell align="right">{formatCurrency(investor.amount)}</TableCell>
+                      <TableCell align="right">{investor.discount ? formatPercentage(investor.discount) : 'N/A'}</TableCell>
                       <TableCell align="right">{investor.cap ? formatCurrency(investor.cap) : 'N/A'}</TableCell>
                       <TableCell align="right">
                         <Button 
@@ -401,9 +404,6 @@ const InvestorManagement = ({ companyId }) => {
                 </TableHead>
                 <TableBody>
                   {company?.investors?.employees?.map((investor) => {
-                    console.log(investor)
-                    console.log("allocated", totalEmployeeAllocated)
-                    console.log("percentage", totalEmployeePercentage)
                     return(
                     <TableRow key={investor.name}>
                       <TableCell>{investor.name}</TableCell>
@@ -546,7 +546,7 @@ const InvestorManagement = ({ companyId }) => {
                       <TextField
                         fullWidth
                         label="Valuation Discount"
-                        name="percentage"
+                        name="discount"
                         type="number"
                         InputProps={{
                           endAdornment: '%'
