@@ -28,21 +28,22 @@ export const calculateCombinedFinancials = (companyA, companyB, scenario) => {
  */
 export const calculateValuation = (combinedFinancials, scenario) => {
   const ownership = scenario.ownership
-  const valuationSource = scenario.valuation.catx > 0 ? 'catx' : 'cactus';
-  const valuations = {
-    ...Object.entries(ownership).map(([company, percentage]) => ({
-      [company]: { source: company, valuation: scenario.valuation[company] / ownership[valuationSource] * percentage }
-    }))
-  }
-  
+  // Get the company with the highest valuation to use as the source
+  const valuationSource = Object.keys(scenario.valuation || {})
+    .filter(key => key !== 'merger' && key !== 'cash')
+    .reduce((highest, company) => 
+      (scenario.valuation[company] > (scenario.valuation[highest] || 0)) ? company : highest, 
+      'catx');
+  const valuations = {}
+    Object.entries(ownership).forEach(([company, percentage]) => {
+      const v = scenario.valuation[valuationSource] / ownership[valuationSource] * percentage
+      valuations[company] = { source: company, valuation: v }
+    })
+
   valuations.merger = {
     source: valuationSource,
-    valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * (ownership.catx + ownership.cactus)
-  }   
-  valuations.vested = {
-    source: valuationSource,
     valuation: scenario.valuation[valuationSource] / ownership[valuationSource] * 100
-  } 
+  }   
   valuations.cash = {
     source: 'cash',
     valuation: combinedFinancials.cashOnHand

@@ -43,7 +43,7 @@ const ScenarioResults = ({ scenario, companies }) => {
       </Box>
     );
   }
-  
+
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -77,29 +77,20 @@ const ScenarioResults = ({ scenario, companies }) => {
               </Typography>
               
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                {companies.map(c => (
+                <Grid item xs={6} key={c.id}>
                   <Typography variant="body2" color="secondary.main" sx={{ fontWeight: 'bold' }}>
-                    CatX:
+                    {c.name}:
                   </Typography>
                   <Typography variant="body1">
-                    {formatCurrency(results.valuation.catx.valuation)}
+                    {formatCurrency(results.valuation[c.id]?.valuation || 0)}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="primary.main" sx={{ fontWeight: 'bold' }}>
-                    Cactus:
-                  </Typography>
-                  <Typography variant="body1">
-                    {formatCurrency(results.valuation.cactus.valuation)}
-                  </Typography>
-                </Grid>
+                ))}
               </Grid>
               
               <Divider sx={{ my: 1 }} />
               
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                With Ben Vested: {formatCurrency(results.valuation.vested.valuation)}
-              </Typography>
               <Typography variant="body2" color="text.secondary">
                 Cash on Hand: {formatCurrency(results.valuation.cash.valuation)}
               </Typography>
@@ -115,7 +106,8 @@ const ScenarioResults = ({ scenario, companies }) => {
             <Divider sx={{ my: 2 }} />
             
             <Grid container spacing={2}>
-              {companies.map(c => (
+              {companies.map(c => {
+                return (
                 <Grid item xs={4} key={c.id}>
                   <Typography variant="subtitle2" color="text.secondary">
                     {c.name}
@@ -124,7 +116,7 @@ const ScenarioResults = ({ scenario, companies }) => {
                     {scenario.ownership[c.id]}%
                   </Typography>
                 </Grid>
-              ))} 
+              )})} 
               
             </Grid>
             

@@ -16,7 +16,7 @@ const OwnershipChart = ({ ownership }) => {
         borderRadius: 1,
         overflow: 'hidden'
       }}>
-        {Object.entries(ownership).map(([company, percentage]) => (
+        {Object.entries(ownership).filter(([company, percentage]) => percentage > 0).map(([company, percentage]) => (
           <Box 
             key={company}
             sx={{
