@@ -18,13 +18,21 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Checkbox
+  Checkbox,
+  Alert,
+  Snackbar
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DescriptionIcon from '@mui/icons-material/Description';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies } from '../../store/companiesSlice';
+import ScenarioCompanies from '../scenarios/ScenarioCompanies';
+import ScenarioCombined from '../scenarios/ScenarioCombined';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -47,9 +55,13 @@ const ReportGenerator = () => {
     financialResults: true,
     operationalResults: true,
     projections: true,
+    companies: true,
+    combined: true,
     recommendations: false
   });
   const [recommendations, setRecommendations] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   
   const reportRef = useRef(null);
   
@@ -64,10 +76,103 @@ const ReportGenerator = () => {
     });
   };
   
-  // Generate report content
+  // Generate PDF report
+  const generatePdf = async () => {
+    if (!selectedScenario) {
+      setAlertMessage('Please select a scenario first');
+      setShowAlert(true);
+      return;
+    }
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const title = reportTitle || `Merger Scenario Report - ${scenarioObject.basicInfo.name}`;
+    
+    // Add title
+    pdf.setFontSize(18);
+    pdf.text(title, 105, 15, { align: 'center' });
+    pdf.setFontSize(12);
+    
+    let yPos = 30;
+    
+    // Add basic info section
+    if (selectedSections.basicInfo && scenarioObject) {
+      pdf.setFontSize(14);
+      pdf.text('Basic Information', 14, yPos);
+      pdf.setFontSize(12);
+      yPos += 10;
+      
+      pdf.text(`Scenario Name: ${scenarioObject.basicInfo.name}`, 14, yPos);
+      yPos += 7;
+      
+      if (scenarioObject.basicInfo.description) {
+        pdf.text('Description:', 14, yPos);
+        yPos += 7;
+        const splitDescription = pdf.splitTextToSize(scenarioObject.basicInfo.description, 180);
+        pdf.text(splitDescription, 14, yPos);
+        yPos += splitDescription.length * 7;
+      }
+      
+      yPos += 10;
+    }
+    
+
+    // Capture and add ScenarioCompanies
+    if (reportRef.current && scenarioObject) {
+      pdf.setFontSize(14);
+      pdf.text('Company Ownership', 14, yPos);
+      pdf.setFontSize(12);
+      yPos += 10;
+      
+      try {
+        const canvas = await html2canvas(reportRef.current, {
+          scale: 2,
+          logging: false,
+          useCORS: true
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 180;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        
+        // Check if we need a new page
+        if (yPos + imgHeight > 280) {
+          pdf.addPage();
+          yPos = 20;
+        }
+        
+        pdf.addImage(imgData, 'PNG', 14, yPos, imgWidth, imgHeight);
+        yPos += imgHeight + 10;
+      } catch (err) {
+        console.error('Error capturing Companies component:', err);
+      }
+    }
+    
+    // Add recommendations if selected
+    if (selectedSections.recommendations && recommendations) {
+      // Check if we need a new page
+      if (yPos > 230) {
+        pdf.addPage();
+        yPos = 20;
+      }
+      
+      pdf.setFontSize(14);
+      pdf.text('Recommendations', 14, yPos);
+      pdf.setFontSize(12);
+      yPos += 10;
+      
+      const splitRecommendations = pdf.splitTextToSize(recommendations, 180);
+      pdf.text(splitRecommendations, 14, yPos);
+    }
+    
+    // Save the PDF
+    pdf.save(`${title.replace(/\s+/g, '_')}.pdf`);
+    
+    setAlertMessage('PDF report generated successfully!');
+    setShowAlert(true);
+  };
+  
+  // Generate report preview
   const generateReport = () => {
-    // In a real app, this would generate a PDF or printable report
-    // For this demo, we'll just scroll to the report preview
     if (reportRef.current) {
       reportRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -183,17 +288,25 @@ const ReportGenerator = () => {
                   />
                 </Grid>
               )}
-              
               <Grid item xs={12}>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
+                <Button
+                  variant="outlined"
+                  color="primary"
                   startIcon={<DescriptionIcon />}
                   onClick={generateReport}
-                  disabled={!selectedScenario || !reportTitle}
-                  fullWidth
+                  disabled={!selectedScenario}
+                  sx={{ mr: 2 }}
                 >
-                  Generate Report
+                  Preview Report
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PictureAsPdfIcon />}
+                  onClick={generatePdf}
+                  disabled={!selectedScenario}
+                >
+                  Generate PDF
                 </Button>
               </Grid>
             </Grid>
@@ -249,8 +362,20 @@ const ReportGenerator = () => {
                     <Typography variant="body1" paragraph>
                       {recommendations}
                     </Typography>
+                    <Divider sx={{ my: 3 }} />
                   </>
                 )}
+
+                <ScenarioCompanies 
+                  scenario={scenarioObject}
+                  companies={companies}
+                />
+                    <Divider sx={{ my: 3 }} />
+
+                <ScenarioCombined 
+                  scenario={scenarioObject}
+                  companies={companies}
+                />
                 
                 <Box sx={{ mt: 4, textAlign: 'center' }}>
                   <Button 
