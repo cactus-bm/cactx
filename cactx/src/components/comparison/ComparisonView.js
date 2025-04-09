@@ -20,6 +20,7 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies } from '../../store/companiesSlice';
 import ScenarioCompanies from '../scenarios/ScenarioCompanies';
+import ScenarioCombined from '../scenarios/ScenarioCombined';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -162,19 +163,25 @@ const ComparisonView = () => {
                 </Typography>
               </Box>
               <Grid container spacing={3} sx={{ width: '100%' }}>
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} lg={6}>
                   <ScenarioCompanies
                     scenario={scenarioObjects[0]}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} lg={6}>
-                  {/* Middle section for future content */}
-                </Grid>
-                <Grid item xs={12} md={6} lg={6}>
-                  {/* Middle section for future content */}
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} lg={6}>
                   <ScenarioCompanies
+                    scenario={scenarioObjects[1]}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={3} sx={{ width: '100%' }}>
+                <Grid item xs={12} lg={6}>
+                  <ScenarioCombined
+                    scenario={scenarioObjects[0]}
+                  />
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <ScenarioCombined
                     scenario={scenarioObjects[1]}
                   />
                 </Grid>

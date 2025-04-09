@@ -55,6 +55,77 @@ const getTypeColor = (type) => {
   }
 };
 
+export const InvestorList = ({investors, valuation, title = "Investor Distribution"}) => (
+    <Box sx={{ mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" component="h2">
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Valuation: {formatCurrency(valuation)}
+        </Typography>
+      </Box>
+      
+      <TableContainer component={Paper} variant="outlined">
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Investor</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell align="right">Equity Percentage</TableCell>
+              {/* Optional additional columns could be added here */}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {investors.map((investor, index) => {
+              if (investor.investors.length > 1) {
+                return (<>
+                <TableRow key={`${investor.name}-${index}`} hover>
+                  <TableCell>{investor.name}</TableCell>
+                  <TableCell/>
+                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
+                </TableRow>  
+                {investor.investors.map((investorLine, index2) => (
+                <TableRow key={`${investor.name}-${index}-${index2}`} hover>
+                  <TableCell />
+                  <TableCell>
+                  <Chip 
+                    label={investorLine.type}
+                    size="small"
+                    color={getTypeColor(investorLine.type)}
+                    variant="outlined"
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  {formatPercentage(investorLine.percentage)}
+                </TableCell>
+              </TableRow>))}
+            </>
+            )}
+            else {
+              return (<>
+              <TableRow key={`${investor.name}-${index}`} hover>
+                <TableCell>{investor.name}</TableCell>
+                <TableCell>
+                  <Chip 
+                    label={investor.investors[0].type}
+                    size="small"
+                    color={getTypeColor(investor.investors[0].type)}
+                    variant="outlined"
+                  />
+                </TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
+              </TableRow>
+            </>);
+            }
+          })}
+
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+)
+
 /**
  * A component that displays a sorted list of investors based on their equity percentages
  * 
@@ -107,83 +178,9 @@ const InvestorDistributionList = ({ investors, valuation, title = "Investor Dist
   }
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6" component="h2">
-          {title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Valuation: {formatCurrency(valuation)}
-        </Typography>
-      </Box>
-      
-      <TableContainer component={Paper} variant="outlined">
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Investor</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell align="right">Equity Percentage</TableCell>
-              {/* Optional additional columns could be added here */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedInvestors.map((investor, index) => {
-              if (investor.investors.length > 1) {
-                return (<>
-                <TableRow key={`${investor.name}-${index}`} hover>
-                  <TableCell>{investor.name}</TableCell>
-                  <TableCell/>
-                  <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
-                </TableRow>  
-                {investor.investors.map((investorLine, index2) => (
-                <TableRow key={`${investor.name}-${index}-${index2}`} hover>
-                  <TableCell />
-                  <TableCell>
-                  <Chip 
-                    label={investorLine.type}
-                    size="small"
-                    color={getTypeColor(investorLine.type)}
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {formatPercentage(investorLine.percentage)}
-                </TableCell>
-              </TableRow>))}
-            </>
-            )}
-            else {
-              return (<>
-              <TableRow key={`${investor.name}-${index}`} hover>
-                <TableCell>{investor.name}</TableCell>
-                <TableCell>
-                  <Chip 
-                    label={investor.investors[0].type}
-                    size="small"
-                    color={getTypeColor(investor.investors[0].type)}
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
-              </TableRow>
-            </>);
-            }
-          })}
-
-            <TableRow>
-              <TableCell colSpan={2} sx={{ fontWeight: 'bold' }}>
-                Total
-              </TableCell>
-              <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                {formatPercentage(total)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <InvestorList investors={sortedInvestors} valuation={valuation} title={title} />
   );
+
 };
 
 export default InvestorDistributionList;
