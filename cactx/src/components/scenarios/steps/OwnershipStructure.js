@@ -9,7 +9,10 @@ import {
   TextField,
   InputAdornment
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectCompanies } from '../../../store/companiesSlice';
 import OwnershipChart from '../../visualizations/OwnershipChart';
+import { getCompanyColor } from '../../../utils/colorUtils';
 
 const OwnershipStructure = ({ data, onChange, companies }) => {
   
@@ -50,7 +53,13 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
       <Grid container spacing={3}>
         {companies.map(company => (
           <Grid item xs={12} md={4} key={company.id}>
-            <Paper sx={{ p: 3, bgcolor: 'secondary.light', color: 'white' }}>
+            <Paper sx={{ 
+              p: 2, 
+              bgcolor: 'grey.800', 
+              color: 'white', 
+              height: '100%',
+              borderLeft: `5px solid ${getCompanyColor(company.id)}`
+            }}>
               <Typography variant="h6" gutterBottom>
                 {company.name} Ownership
               </Typography>
@@ -83,15 +92,18 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
             <Slider
               value={data[company.id] || 0}
               onChange={(event, newValue) => handleChange(company.id, newValue)}
-              aria-labelledby="catx-ownership-slider"
+              aria-labelledby={`${company.id}-ownership-slider`}
               valueLabelDisplay="auto"
               step={1}
               min={0}
               max={100}
               sx={{
-                color: 'white',
+                color: getCompanyColor(company.id),
                 '& .MuiSlider-thumb': {
                   backgroundColor: 'white',
+                  borderColor: getCompanyColor(company.id),
+                  borderWidth: 2,
+                  borderStyle: 'solid',
                 },
                 '& .MuiSlider-rail': {
                   backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -110,7 +122,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
             <Divider sx={{ my: 2 }} />
             <OwnershipChart ownership={data} />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              This visualization shows the relative ownership percentage between CatX and Cactus in the merged company.
+              This visualization shows the relative ownership percentage between all companies in the merged entity.
             </Typography>
           </Paper>
         </Grid>

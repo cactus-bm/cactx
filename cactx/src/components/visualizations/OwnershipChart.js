@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
+import { getCompanyColor } from '../../utils/colorUtils';
 
 /**
  * Displays a horizontal stacked bar chart of ownership percentages
@@ -17,19 +18,23 @@ const OwnershipChart = ({ ownership }) => {
         overflow: 'hidden'
       }}>
         {Object.entries(ownership).filter(([company, percentage]) => percentage > 0).map(([company, percentage]) => (
-          <Box 
-            key={company}
-            sx={{
-              width: `${percentage}%`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 'bold',
-              minWidth: '40px'
-            }}
-          >
-            {percentage}%
-          </Box>
+          <Tooltip title={`${company}: ${percentage}%`} key={company}>
+            <Box 
+              sx={{
+                width: `${percentage}%`,
+                bgcolor: getCompanyColor(company),
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                minWidth: '40px',
+                textShadow: '0px 0px 2px rgba(0,0,0,0.5)'
+              }}
+            >
+              {percentage}%
+            </Box>
+          </Tooltip>
         ))}
       </Box>
     </Box>

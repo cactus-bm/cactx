@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectCompanies } from '../../../store/companiesSlice';
+import { getCompanyColor } from '../../../utils/colorUtils';
 
 const ValuationAssumptions = ({ data, onChange }) => {
   const companies = useSelector(selectCompanies);
@@ -74,15 +75,14 @@ const ValuationAssumptions = ({ data, onChange }) => {
         {companies.map((company, index) => {
           const companyValuation = getCompanyValuation(company.id);
           const isSelected = companyValuation > 0;
-          // Create a different border color for each company (cycling through primary, secondary, success, warning, info)
-          const colors = ['#3f51b5', '#f50057', '#4caf50', '#ff9800', '#2196f3'];
-          const colorIndex = index % colors.length;
+          // Get consistent color for this company
+          const companyColor = getCompanyColor(company.id);
           
           return (
             <Grid item xs={12} md={6} key={company.id}>
               <Paper sx={{ 
                 p: 3, 
-                border: isSelected ? `2px solid ${colors[colorIndex]}` : 'none',
+                border: isSelected ? `2px solid ${companyColor}` : 'none',
                 height: '100%'
               }}>
                 <Typography variant="subtitle1" gutterBottom>
@@ -104,7 +104,7 @@ const ValuationAssumptions = ({ data, onChange }) => {
                 />
                 
                 {companyValuation > 0 && (
-                  <FormHelperText sx={{ color: 'primary.main', mt: 1 }}>
+                  <FormHelperText sx={{ color: companyColor, mt: 1 }}>
                     {company.name} valuation set to {formatCurrency(companyValuation)}
                   </FormHelperText>
                 )}
