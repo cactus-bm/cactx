@@ -58,10 +58,18 @@ export const calculateSplit = (investors, valuation) => {
  */
 export const convertSafeToEquity = (safeInvestors, valuation) => {
   return safeInvestors.map(investor => {
-    // If cap is undefined or 0, use valuation
-    const effectiveValuation = investor.cap && investor.cap > 0 && investor.cap < valuation 
-      ? investor.cap  // Use cap if it's lower than valuation
-      : valuation;
+    let effectiveValuation = valuation;
+    
+    // Apply discount if available (e.g., 20% discount means multiply by 0.8)
+    if (investor.discount && investor.discount > 0 && investor.discount < 1) {
+      const discountMultiplier = 1 - investor.discount;
+      effectiveValuation = effectiveValuation * discountMultiplier;
+    }
+
+    // If cap is defined, greater than 0, and less than valuation, use it
+    if (investor.cap && investor.cap > 0 && investor.cap < effectiveValuation) {
+      effectiveValuation = investor.cap;
+    }
     
     // Calculate ownership percentage using the investment amount divided by effective valuation
     const percentage = investor.amount / effectiveValuation;
@@ -71,6 +79,8 @@ export const convertSafeToEquity = (safeInvestors, valuation) => {
       type: 'safe',
       originalInvestment: investor.amount,
       cap: investor.cap,
+      discount: investor.discount,
+      effectiveValuation: effectiveValuation,
       percentage
     };
   });
