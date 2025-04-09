@@ -19,6 +19,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies } from '../../store/companiesSlice';
+import ScenarioCompanies from '../scenarios/ScenarioCompanies';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -32,7 +33,6 @@ const formatCurrency = (value) => {
 const ComparisonView = () => {
   const navigate = useNavigate();
   const scenarios = useSelector(selectScenarios);
-  const companies = useSelector(selectCompanies);
   
   const [selectedScenarios, setSelectedScenarios] = useState([null, null]);
   
@@ -161,6 +161,12 @@ const ComparisonView = () => {
                   Comparison Results
                 </Typography>
               </Box>
+              <ScenarioCompanies
+                scenario={scenarioObjects[0]}
+              />
+              <ScenarioCompanies
+                scenario={scenarioObjects[1]}
+              />
             </>
           )}
         </>
