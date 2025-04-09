@@ -17,6 +17,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch } from 'react-redux';
+import { updateCompanyName } from '../../store/companiesSlice';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-US', { 
@@ -29,9 +30,11 @@ const formatCurrency = (value) => {
 const CompanyCard = ({ company, onUpdateCompany }) => {
   const { id, name, cashOnHand, arr, metrics } = company;
   const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(name);
   const [editedCashOnHand, setEditedCashOnHand] = useState(cashOnHand);
   const [editedArr, setEditedArr] = useState(arr);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
   // Determine styling based on company
   const isGreen = id === 'cactus';
@@ -45,6 +48,11 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
         cashOnHand: editedCashOnHand,
         arr: editedArr 
       });
+      
+      // Save company name change
+      if (editedName !== name) {
+        dispatch(updateCompanyName({ companyId: id, newName: editedName }));
+      }
     }
     setIsEditing(!isEditing);
   };
@@ -63,6 +71,10 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
     }
   };
   
+  const handleNameChange = (e) => {
+    setEditedName(e.target.value);
+  };
+  
   return (
     <Card className="card">
       <CardContent>
@@ -72,9 +84,22 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
           >
             <BusinessIcon />
           </Avatar>
-          <Typography variant="h5" component="div" sx={{ color: primaryColor, fontWeight: 'bold' }}>
-            {name}
-          </Typography>
+          {isEditing ? (
+            <TextField
+              value={editedName}
+              onChange={handleNameChange}
+              variant="outlined"
+              size="small"
+              sx={{ flexGrow: 1 }}
+              InputProps={{
+                sx: { fontWeight: 'bold', fontSize: '1.25rem' }
+              }}
+            />
+          ) : (
+            <Typography variant="h5" component="div" sx={{ color: primaryColor, fontWeight: 'bold' }}>
+              {name}
+            </Typography>
+          )}
         </Box>
         
         <Typography variant="h6" component="div" sx={{ mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

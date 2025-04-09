@@ -110,17 +110,27 @@ export const companiesSlice = createSlice({
     setCompanies: (state, action) => {
       // This action replaces the entire companies array with the provided payload
       // Used for loading saved state from local storage
-      state.companies = action.payload.companies || action.payload;
+      state.companies = action.payload;
+      state.isLoading = false;
+      state.error = null;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
     setError: (state, action) => {
       state.error = action.payload;
+      state.isLoading = false;
     },
     addCompany: (state, action) => {
       // Add a new company to the companies array
       state.companies.push(action.payload);
+    },
+    updateCompanyName: (state, action) => {
+      const { companyId, newName } = action.payload;
+      const companyToUpdate = state.companies.find(company => company.id === companyId);
+      if (companyToUpdate) {
+        companyToUpdate.name = newName;
+      }
     },
   },
 });
@@ -131,6 +141,7 @@ export const {
   setLoading,
   setError,
   addCompany,
+  updateCompanyName
 } = companiesSlice.actions;
 
 export const selectCompanies = (state) => state.companies.companies;
