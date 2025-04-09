@@ -29,6 +29,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { selectCompanyById, updateCompanyData } from '../../store/companiesSlice';
+import EquityDistributionViewer from './EquityDistributionViewer';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -440,6 +441,9 @@ const InvestorManagement = ({ companyId }) => {
               <strong>Total Employee Equity:</strong> {formatPercentage(totalEmployeePercentage)}
             </Typography>
           </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <EquityDistributionViewer companyId={companyId} />
         </Grid>
       </Grid>
       
