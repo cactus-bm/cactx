@@ -71,8 +71,8 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
   };
   
   // Change handlers for each owner
-  const handleChange = (event, newValue) => {
-    adjustValues(event.name, newValue);
+  const handleChange = (companyId, newValue) => {
+    adjustValues(companyId, newValue);
   };
   
   const handleInputChange = (id, event) => {
@@ -125,8 +125,8 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
               />
             </Box>
             <Slider
-              value={data[company.id]}
-              onChange={(e) => handleChange(company.id, e.target.value)}
+              value={data[company.id] || 0}
+              onChange={(event, newValue) => handleChange(company.id, newValue)}
               aria-labelledby="catx-ownership-slider"
               valueLabelDisplay="auto"
               step={1}
