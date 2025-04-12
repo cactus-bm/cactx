@@ -119,7 +119,7 @@ const ReportGenerator = () => {
             </Typography>
             
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid item size={{xs:12, md:6}}>
                 <FormControl fullWidth>
                   <InputLabel>Select Scenario</InputLabel>
                   <Select
@@ -139,7 +139,7 @@ const ReportGenerator = () => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12} md={6}>
+              <Grid item size={{xs:12, md:6}}>
                 <TextField
                   fullWidth
                   label="Report Title"
@@ -149,7 +149,7 @@ const ReportGenerator = () => {
                 />
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid item size={{xs:12}}>
                 <Typography variant="subtitle1" gutterBottom>
                   Select Sections to Include
                 </Typography>
@@ -178,7 +178,7 @@ const ReportGenerator = () => {
               </Grid>
               
               {selectedSections.recommendations && (
-                <Grid item xs={12}>
+                <Grid item size={{xs:12}}>
                   <TextField
                     fullWidth
                     label="Recommendations"
@@ -190,7 +190,7 @@ const ReportGenerator = () => {
                   />
                 </Grid>
               )}
-              <Grid item xs={12}>
+              <Grid item size={{xs:12}}>
               </Grid>
             </Grid>
           </Paper>
