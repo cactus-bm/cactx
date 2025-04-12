@@ -41,7 +41,7 @@ const EquityDistributionViewer = ({ companyId }) => {
         </Typography>
         
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid item size={{xs:12, md:6}}>
             <TextField
               fullWidth
               label="Company Valuation"

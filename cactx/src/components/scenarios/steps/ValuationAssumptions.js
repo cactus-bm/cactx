@@ -79,7 +79,7 @@ const ValuationAssumptions = ({ data, onChange }) => {
           const companyColor = getCompanyColor(company.id);
           
           return (
-            <Grid item xs={12} md={6} key={company.id}>
+            <Grid item size={{xs:12, md:6}} key={company.id}>
               <Paper sx={{ 
                 p: 3, 
                 border: isSelected ? `2px solid ${companyColor}` : 'none',
@@ -113,7 +113,7 @@ const ValuationAssumptions = ({ data, onChange }) => {
           );
         })}
         
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <Paper sx={{ p: 3, bgcolor: 'info.light', color: 'white' }}>
             <Typography variant="subtitle1" gutterBottom>
               Valuation Method

@@ -67,7 +67,7 @@ const ScenarioCompanies = ({ scenario }) => {
           }
           
           return (
-            <Grid item xs={12} key={company.id}>
+            <Grid item size={12} key={company.id}>
               <Card variant="outlined">
                 <CardContent>
                   <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>

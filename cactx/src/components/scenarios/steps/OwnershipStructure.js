@@ -52,7 +52,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
       
       <Grid container spacing={3}>
         {companies.map(company => (
-          <Grid item xs={12} md={4} key={company.id}>
+          <Grid item size={{xs:12, md:4}} key={company.id}>
             <Paper sx={{ 
               p: 2, 
               bgcolor: 'grey.800', 
@@ -114,7 +114,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
         </Grid>
         ))}
         
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Ownership Distribution

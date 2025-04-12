@@ -84,7 +84,7 @@ const ScenarioCombined = ({ scenario }) => {
       
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         <Grid container spacing={2} direction="column">
-          <Grid item xs={12}>
+          <Grid item size={12}>
             <Card variant="outlined">
               <CardContent>
                 <InvestorList

@@ -53,7 +53,7 @@ const ScenarioResults = ({ scenario, companies }) => {
       
         {/* Valuation */}
         <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Merger Valuation
@@ -76,7 +76,7 @@ const ScenarioResults = ({ scenario, companies }) => {
               
               <Grid container spacing={2}>
                 {companies.map(c => (
-                <Grid item xs={6} key={c.id}>
+                <Grid item size={6} key={c.id}>
                   <Typography variant="body2" color="secondary.main" sx={{ fontWeight: 'bold' }}>
                     {c.name}:
                   </Typography>
@@ -90,7 +90,7 @@ const ScenarioResults = ({ scenario, companies }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               Ownership Structure
@@ -100,7 +100,7 @@ const ScenarioResults = ({ scenario, companies }) => {
             <Grid container spacing={2}>
               {companies.map(c => {
                 return (
-                <Grid item xs={4} key={c.id}>
+                <Grid item size={4} key={c.id}>
                   <Typography variant="subtitle2" color="text.secondary">
                     {c.name}
                   </Typography>

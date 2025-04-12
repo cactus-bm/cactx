@@ -246,7 +246,7 @@ const InvestorManagement = ({ companyId }) => {
       
       <Grid container spacing={4}>
         {/* Equity Investors */}
-        <Grid item xs={12} md={4}>
+        <Grid item size={{xs:12, md:4}}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">
@@ -309,7 +309,7 @@ const InvestorManagement = ({ companyId }) => {
         </Grid>
         
         {/* SAFE Investors */}
-        <Grid item xs={12} md={4}>
+        <Grid item size={{xs:12, md:4}}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">
@@ -376,7 +376,7 @@ const InvestorManagement = ({ companyId }) => {
         </Grid>
         
         {/* Employee Investors */}
-        <Grid item xs={12} md={4}>
+        <Grid item size={{xs:12, md:4}}>
           <Paper sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">
@@ -442,7 +442,7 @@ const InvestorManagement = ({ companyId }) => {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <EquityDistributionViewer companyId={companyId} />
         </Grid>
       </Grid>
@@ -465,7 +465,7 @@ const InvestorManagement = ({ companyId }) => {
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item size={12}>
                 <FormControl fullWidth>
                   <InputLabel>Investor Type</InputLabel>
                   <Select
@@ -480,7 +480,7 @@ const InvestorManagement = ({ companyId }) => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12}>
+              <Grid item size={12}>
                 <TextField
                   fullWidth
                   label="Investor Name"
@@ -492,7 +492,7 @@ const InvestorManagement = ({ companyId }) => {
               </Grid>
 
               {investorType === 'employees' && (
-                <Grid item xs={12}>
+                <Grid item size={12}>
                   <TextField
                     fullWidth
                     label="Allocated Units"
@@ -510,7 +510,7 @@ const InvestorManagement = ({ companyId }) => {
               )}
               
               {investorType === 'equity' && (
-                <Grid item xs={12}>
+                <Grid item size={12}>
                   <TextField
                     fullWidth
                     label="Ownership Percentage"
@@ -533,7 +533,7 @@ const InvestorManagement = ({ companyId }) => {
 
               {investorType === 'safe' && (
                   <>
-                    <Grid item xs={12}>
+                    <Grid item size={12}>
                       <TextField
                         fullWidth
                         label="Investment Amount"
@@ -546,7 +546,7 @@ const InvestorManagement = ({ companyId }) => {
                         required
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item size={12}>
                       <TextField
                         fullWidth
                         label="Valuation Discount"
@@ -565,7 +565,7 @@ const InvestorManagement = ({ companyId }) => {
                         helperText="The discount applied to the valuation before the cap is applied."
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item size={12}>
                       <TextField
                         fullWidth
                         label="Valuation Cap"

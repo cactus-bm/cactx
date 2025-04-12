@@ -88,7 +88,7 @@ const ComparisonView = () => {
             </Typography>
             
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid item size={{xs:12, md:6}}>
                 <FormControl fullWidth size="medium">
                   <InputLabel>First Scenario</InputLabel>
                   <Select
@@ -120,7 +120,7 @@ const ComparisonView = () => {
                 </FormControl>
               </Grid>
               
-              <Grid item xs={12} md={6}>
+              <Grid item size={{xs:12, md:6}}>
                 <FormControl fullWidth size="medium">
                   <InputLabel>Second Scenario</InputLabel>
                   <Select
@@ -163,24 +163,24 @@ const ComparisonView = () => {
                 </Typography>
               </Box>
               <Grid container spacing={3} sx={{ width: '100%' }}>
-                <Grid item xs={12} lg={6}>
+                <Grid item size={{xs:12, lg:6}}>
                   <ScenarioCompanies
                     scenario={scenarioObjects[0]}
                   />
                 </Grid>
-                <Grid item xs={12} lg={6}>
+                <Grid item size={{xs:12, lg:6}}>
                   <ScenarioCompanies
                     scenario={scenarioObjects[1]}
                   />
                 </Grid>
               </Grid>
               <Grid container spacing={3} sx={{ width: '100%' }}>
-                <Grid item xs={12} lg={6}>
+                <Grid item size={{xs:12, lg:6}}>
                   <ScenarioCombined
                     scenario={scenarioObjects[0]}
                   />
                 </Grid>
-                <Grid item xs={12} lg={6}>
+                <Grid item size={{xs:12, lg:6}}>
                   <ScenarioCombined
                     scenario={scenarioObjects[1]}
                   />

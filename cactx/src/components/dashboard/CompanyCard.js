@@ -111,7 +111,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
         
         <Box sx={{ mb: 2 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item size={{xs:12, md:6}}>
               <Typography variant="body2" color="text.secondary">
                 Cash on Hand
               </Typography>
@@ -134,7 +134,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
               )}
             </Grid>
             
-            <Grid item xs={12} md={6}>
+            <Grid item size={{xs:12, md:6}}>
               <Typography variant="body2" color="text.secondary">
                 Annual Recurring Revenue
               </Typography>

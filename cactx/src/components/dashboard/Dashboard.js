@@ -158,7 +158,7 @@ const Dashboard = () => {
       
       <Grid container spacing={3}>
         {companies.map(company => (
-          <Grid item xs={12} md={6} key={company.id}>
+          <Grid item size={{xs:12, md:6}} key={company.id}>
             <CompanyCard company={company} onUpdateCompany={handleUpdateCompany} />
           </Grid>
         ))}
@@ -172,7 +172,7 @@ const Dashboard = () => {
           
           <Grid container spacing={3}>
             {scenarios.slice(0, 3).map(scenario => (
-              <Grid item xs={12} md={4} key={scenario.id}>
+              <Grid item size={{xs:12, md:4}} key={scenario.id}>
                 <Card className="card">
                   <CardContent>
                     <Typography variant="h6" component="div">

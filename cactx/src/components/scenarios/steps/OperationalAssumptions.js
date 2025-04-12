@@ -20,7 +20,7 @@ const OperationalAssumptions = ({ data, onChange }) => {
       </Typography>
       
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Workforce Reduction
@@ -73,7 +73,7 @@ const OperationalAssumptions = ({ data, onChange }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Office Consolidation
@@ -126,7 +126,7 @@ const OperationalAssumptions = ({ data, onChange }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Integration Timeline

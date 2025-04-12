@@ -20,7 +20,7 @@ const FinancialAssumptions = ({ data, onChange }) => {
       </Typography>
       
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Cost Synergies
@@ -73,7 +73,7 @@ const FinancialAssumptions = ({ data, onChange }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Revenue Growth
@@ -126,7 +126,7 @@ const FinancialAssumptions = ({ data, onChange }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Integration Costs
@@ -157,7 +157,7 @@ const FinancialAssumptions = ({ data, onChange }) => {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={6}>
+        <Grid item size={{xs:12, md:6}}>
           <Paper sx={{ p: 3 }}>
             <Typography variant="subtitle1" gutterBottom>
               Annual Growth Projections

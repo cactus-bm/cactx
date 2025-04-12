@@ -24,7 +24,7 @@ const DashboardSummary = ({ scenarios }) => {
   
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
+      <Grid item size={{xs:12, md:4}}>
         <Card className="card" sx={{ bgcolor: 'primary.light', color: 'white' }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -42,7 +42,7 @@ const DashboardSummary = ({ scenarios }) => {
         </Card>
       </Grid>
       
-      <Grid item xs={12} md={4}>
+      <Grid item size={{xs:12, md:4}}>
         <Card className="card" sx={{ bgcolor: 'secondary.light', color: 'white' }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -60,7 +60,7 @@ const DashboardSummary = ({ scenarios }) => {
         </Card>
       </Grid>
       
-      <Grid item xs={12} md={4}>
+      <Grid item size={{xs:12, md:4}}>
         <Card className="card" sx={{ bgcolor: 'grey.700', color: 'white' }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

@@ -17,7 +17,7 @@ const BasicInfo = ({ data, onChange }) => {
       </Typography>
       
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <TextField
             required
             fullWidth
@@ -29,7 +29,7 @@ const BasicInfo = ({ data, onChange }) => {
           />
         </Grid>
         
-        <Grid item xs={12}>
+        <Grid item size={12}>
           <TextField
             fullWidth
             label="Description"
