@@ -36,6 +36,7 @@ import IconButton from '@mui/material/IconButton';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import MDEditor from '@uiw/react-md-editor';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -179,15 +180,21 @@ const ReportGenerator = () => {
               
               {selectedSections.recommendations && (
                 <Grid item size={{xs:12}}>
-                  <TextField
-                    fullWidth
-                    label="Recommendations"
-                    value={recommendations}
-                    onChange={(e) => setRecommendations(e.target.value)}
-                    multiline
-                    rows={4}
-                    placeholder="Enter your recommendations and insights about this merger scenario..."
-                  />
+                  <Typography variant="subtitle1" gutterBottom>
+                    Recommendations (Markdown Supported)
+                  </Typography>
+                  <Box sx={{ border: '1px solid #e0e0e0', borderRadius: 1, mb: 2 }}>
+                    <MDEditor
+                      value={recommendations}
+                      onChange={setRecommendations}
+                      height={250}
+                      preview="edit"
+                      placeholder="Enter your recommendations and insights about this merger scenario..."
+                    />
+                  </Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Tip: You can use Markdown formatting to add headers, lists, bold text, and more to your recommendations.
+                  </Typography>
                 </Grid>
               )}
               <Grid item size={{xs:12}}>
@@ -260,9 +267,9 @@ const ReportGenerator = () => {
                     <Typography variant="h5" gutterBottom>
                       Recommendations
                     </Typography>
-                    <Typography variant="body1" paragraph>
-                      {recommendations}
-                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <MDEditor.Markdown source={recommendations} style={{ backgroundColor: 'transparent' }} />
+                    </Box>
                   </>
                 )}
                 <Divider sx={{ my: 3, '@media print': { pageBreakAfter: 'always', breakAfter: 'page' } }} />
