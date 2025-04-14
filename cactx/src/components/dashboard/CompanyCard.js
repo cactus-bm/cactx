@@ -45,7 +45,6 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
   
   // Use company's custom color if available, otherwise use the utility
   const companyColor = company.color || getCompanyColor(id);
-  const avatarBgColor = 'secondary.main';
   
   const handleEditToggle = () => {
     if (isEditing) {
@@ -93,6 +92,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
   
   const handleColorChange = (color) => {
     setSelectedColor(color);
+    dispatch(updateCompanyColor({ companyId: id, color }));
   };
   
   const handleNameChange = (e) => {
@@ -103,7 +103,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
     <Card className="card">
       <CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Avatar sx={{ bgcolor: avatarBgColor, mr: 2, borderLeft: `5px solid ${companyColor}` }}>
+          <Avatar sx={{ bgcolor: `${companyColor}`, mr: 2, border: `2px solid ${companyColor}` }}>
             <BusinessIcon />
           </Avatar>
           
