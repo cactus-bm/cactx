@@ -97,6 +97,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
               step={1}
               min={0}
               max={100}
+              tabIndex="-1"
               sx={{
                 color: getCompanyColor(company.id),
                 '& .MuiSlider-thumb': {
