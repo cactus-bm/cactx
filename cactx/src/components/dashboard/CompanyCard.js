@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Card, 
   CardContent, 
@@ -10,14 +10,19 @@ import {
   InputAdornment,
   IconButton,
   Grid,
-  Button
+  Button,
+  Tooltip,
+  Popover
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BusinessIcon from '@mui/icons-material/Business';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 import { useDispatch } from 'react-redux';
-import { updateCompanyName } from '../../store/companiesSlice';
+import { updateCompanyName, updateCompanyColor } from '../../store/companiesSlice';
+import { HexColorPicker } from 'react-colorful';
+import { getCompanyColor } from '../../utils/colorUtils';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-US', { 
@@ -33,13 +38,14 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
   const [editedName, setEditedName] = useState(name);
   const [editedCashOnHand, setEditedCashOnHand] = useState(cashOnHand);
   const [editedArr, setEditedArr] = useState(arr);
+  const [colorPickerAnchor, setColorPickerAnchor] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(company.color || getCompanyColor(id));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // Determine styling based on company
-  const isGreen = id === 'cactus';
-  const primaryColor = isGreen ? '#2e7d32' : '#1976d2';
-  const avatarBgColor = isGreen ? 'primary.main' : 'secondary.main';
+  // Use company's custom color if available, otherwise use the utility
+  const companyColor = company.color || getCompanyColor(id);
+  const avatarBgColor = 'secondary.main';
   
   const handleEditToggle = () => {
     if (isEditing) {
@@ -52,6 +58,11 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
       // Save company name change
       if (editedName !== name) {
         dispatch(updateCompanyName({ companyId: id, newName: editedName }));
+      }
+      
+      // Save company color if changed
+      if (selectedColor !== company.color) {
+        dispatch(updateCompanyColor({ companyId: id, color: selectedColor }));
       }
     }
     setIsEditing(!isEditing);
@@ -71,6 +82,19 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
     }
   };
   
+  // Color picker handlers
+  const handleColorPickerOpen = (event) => {
+    setColorPickerAnchor(event.currentTarget);
+  };
+  
+  const handleColorPickerClose = () => {
+    setColorPickerAnchor(null);
+  };
+  
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+  };
+  
   const handleNameChange = (e) => {
     setEditedName(e.target.value);
   };
@@ -78,28 +102,74 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
   return (
     <Card className="card">
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Avatar 
-            sx={{ bgcolor: avatarBgColor, mr: 2 }}
-          >
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Avatar sx={{ bgcolor: avatarBgColor, mr: 2, borderLeft: `5px solid ${companyColor}` }}>
             <BusinessIcon />
           </Avatar>
+          
           {isEditing ? (
             <TextField
               value={editedName}
-              onChange={handleNameChange}
-              variant="outlined"
-              size="small"
-              sx={{ flexGrow: 1 }}
-              InputProps={{
-                sx: { fontWeight: 'bold', fontSize: '1.25rem' }
-              }}
+              onChange={(e) => setEditedName(e.target.value)}
+              variant="standard"
+              fullWidth
+              autoFocus
             />
           ) : (
-            <Typography variant="h5" component="div" sx={{ color: primaryColor, fontWeight: 'bold' }}>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               {name}
             </Typography>
           )}
+          
+          {isEditing && (
+            <Tooltip title="Change company color">
+              <IconButton 
+                onClick={handleColorPickerOpen}
+                sx={{ 
+                  mr: 1,
+                  bgcolor: selectedColor + '33', // Add transparency
+                  '&:hover': { bgcolor: selectedColor + '55' } 
+                }}
+              >
+                <ColorLensIcon sx={{ color: selectedColor }} />
+              </IconButton>
+            </Tooltip>
+          )}
+          
+          <IconButton onClick={handleEditToggle} color="primary">
+            {isEditing ? <CheckIcon /> : <EditIcon />}
+          </IconButton>
+          
+          <Popover
+            open={Boolean(colorPickerAnchor)}
+            anchorEl={colorPickerAnchor}
+            onClose={handleColorPickerClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <Box sx={{ p: 1 }}>
+              <HexColorPicker color={selectedColor} onChange={handleColorChange} />
+              <Box sx={{ mt: 1, textAlign: 'center' }}>
+                <Typography variant="body2" gutterBottom>
+                  {selectedColor}
+                </Typography>
+                <Button 
+                  size="small" 
+                  variant="contained" 
+                  onClick={handleColorPickerClose}
+                  sx={{ bgcolor: selectedColor, '&:hover': { bgcolor: selectedColor + 'dd' } }}
+                >
+                  Apply
+                </Button>
+              </Box>
+            </Box>
+          </Popover>
         </Box>
         
         <Typography variant="h6" component="div" sx={{ mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -128,7 +198,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
                   }}
                 />
               ) : (
-                <Typography variant="h5" sx={{ fontWeight: 'medium', color: primaryColor }}>
+                <Typography variant="h5" sx={{ fontWeight: 'medium', color: companyColor }}>
                   {formatCurrency(cashOnHand)}
                 </Typography>
               )}
@@ -151,7 +221,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
                   }}
                 />
               ) : (
-                <Typography variant="h5" sx={{ fontWeight: 'medium', color: primaryColor }}>
+                <Typography variant="h5" sx={{ fontWeight: 'medium', color: companyColor }}>
                   {formatCurrency(arr)}
                 </Typography>
               )}
@@ -164,7 +234,7 @@ const CompanyCard = ({ company, onUpdateCompany }) => {
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button 
             variant="outlined" 
-            color={isGreen ? "primary" : "secondary"}
+            color="primary"
             size="small"
             onClick={() => navigate(`/investors/${id}`)}
           >
