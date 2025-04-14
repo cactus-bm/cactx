@@ -127,9 +127,16 @@ export const companiesSlice = createSlice({
     },
     updateCompanyName: (state, action) => {
       const { companyId, newName } = action.payload;
-      const companyToUpdate = state.companies.find(company => company.id === companyId);
-      if (companyToUpdate) {
-        companyToUpdate.name = newName;
+      const company = state.companies.find(c => c.id === companyId);
+      if (company) {
+        company.name = newName;
+      }
+    },
+    updateCompanyColor: (state, action) => {
+      const { companyId, color } = action.payload;
+      const company = state.companies.find(c => c.id === companyId);
+      if (company) {
+        company.color = color;
       }
     },
   },
@@ -141,7 +148,8 @@ export const {
   setLoading,
   setError,
   addCompany,
-  updateCompanyName
+  updateCompanyName,
+  updateCompanyColor
 } = companiesSlice.actions;
 
 export const selectCompanies = (state) => state.companies.companies;
