@@ -173,8 +173,8 @@ const AppHeader = () => {
           }}
           onClick={() => navigate('/')}
         >
-          <span style={{ color: '#63a4ff' }}>Cact</span>
-          <span style={{ color: '#60ad5e' }}>X</span>
+          <span style={{ color: '#63a4ff' }}>M</span>
+          <span style={{ color: '#60ad5e' }}>M</span>
           <Typography variant="subtitle2" component="span" sx={{ ml: 1 }}>
             Merger Modeling
           </Typography>
