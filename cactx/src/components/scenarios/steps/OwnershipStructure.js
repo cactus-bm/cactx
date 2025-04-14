@@ -7,7 +7,8 @@ import {
   Paper,
   Divider,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Alert
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { selectCompanies } from '../../../store/companiesSlice';
@@ -15,6 +16,13 @@ import OwnershipChart from '../../visualizations/OwnershipChart';
 import { getCompanyColor } from '../../../utils/colorUtils';
 
 const OwnershipStructure = ({ data, onChange, companies }) => {
+  // Check if ownership percentages add up to 100% (within 5 decimal places)
+  const calculateTotal = () => {
+    return Object.values(data).reduce((sum, value) => sum + (value || 0), 0);
+  };
+  
+  const total = calculateTotal();
+  const isValid = Math.abs(total - 100) < 0.00001; // Within 5 decimal places
   
   // Handler for adjusting values to ensure they sum to 100%
   const adjustValues = (field, newValue) => {
@@ -58,7 +66,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
               bgcolor: 'grey.800', 
               color: 'white', 
               height: '100%',
-              borderLeft: `10px solid ${getCompanyColor(company.id)}`
+              borderLeft: `20px solid ${getCompanyColor(company.id)}`
             }}>
               <Typography variant="h6" gutterBottom>
                 {company.name} Ownership
@@ -121,6 +129,15 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
             <Typography variant="h6" gutterBottom>
               Ownership Distribution
             </Typography>
+            
+            {!isValid && (
+              <Alert 
+                severity="warning" 
+                sx={{ mb: 2 }}
+              >
+                Ownership percentages currently total {total.toFixed(2)}%. Please adjust to ensure they add up to exactly 100%.
+              </Alert>
+            )}
             <Divider sx={{ my: 2 }} />
             <OwnershipChart ownership={data} />
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
