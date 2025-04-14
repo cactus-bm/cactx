@@ -58,7 +58,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
               bgcolor: 'grey.800', 
               color: 'white', 
               height: '100%',
-              borderLeft: `5px solid ${getCompanyColor(company.id)}`
+              borderLeft: `10px solid ${getCompanyColor(company.id)}`
             }}>
               <Typography variant="h6" gutterBottom>
                 {company.name} Ownership
@@ -80,6 +80,7 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
                 }}
                 InputProps={{
                   endAdornment: <InputAdornment position="end" sx={{ color: 'white' }}>%</InputAdornment>,
+                  sx: { color: 'white' }
                 }}
                 inputProps={{
                   min: 0,
