@@ -87,7 +87,11 @@ const OwnershipStructure = ({ data, onChange, companies }) => {
                   }
                 }}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end" sx={{ color: 'white' }}>%</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Typography sx={{ color: 'white' }}>%</Typography>
+                    </InputAdornment>
+                  ),
                   sx: { color: 'white' }
                 }}
                 inputProps={{
