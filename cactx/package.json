@@ -2,7 +2,7 @@
   "name": "cactx",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://cactus-bm.github.io/cactx",
+  "homepage": "https://mergermodeling.com",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
