@@ -17,12 +17,24 @@ const COMPANY_COLORS = [
 ];
 
 /**
- * Returns a deterministic color for a given company ID
- * @param {string} companyId - The unique identifier for the company
+ * Returns a deterministic color for a given company ID or the custom color if set
+ * @param {string|object} companyIdOrObj - The unique identifier for the company or company object
  * @returns {string} - Hex color code
  */
-export const getCompanyColor = (companyId) => {
-  // Create a simple hash from the company ID
+export const getCompanyColor = (companyIdOrObj) => {
+  // Check if we received a company object with a color property
+  if (typeof companyIdOrObj === 'object' && companyIdOrObj !== null) {
+    if (companyIdOrObj.color) {
+      return companyIdOrObj.color;
+    }
+    // If company object was passed but has no color, use the ID
+    if (companyIdOrObj.id) {
+      companyIdOrObj = companyIdOrObj.id;
+    }
+  }
+  
+  // Fall back to deterministic color based on ID
+  const companyId = String(companyIdOrObj);
   let hash = 0;
   
   for (let i = 0; i < companyId.length; i++) {
