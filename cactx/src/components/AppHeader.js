@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Snackbar, Alert, Tooltip, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SaveIcon from '@mui/icons-material/Save';
-import UploadIcon from '@mui/icons-material/Upload';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { saveStateToLocalStorage, loadStateFromLocalStorage, hasSavedState } from '../store/persistenceUtils';
@@ -211,7 +211,7 @@ const AppHeader = () => {
             <Tooltip title={hasSaved ? "Load from browser storage" : "No saved state available"}>
               <span>
                 <IconButton color="inherit" onClick={handleLoadState} disabled={!hasSaved}>
-                  <UploadIcon />
+                  <FolderOpenIcon />
                 </IconButton>
               </span>
             </Tooltip>
