@@ -387,13 +387,23 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       
       {chartData && (
         <Box>
-          <Box sx={{ height: 350, mb: 3 }}>
+          <Box sx={{ height: 400, mb: 3 }}>
             {chartData && (
               <Bar
                 data={chartData}
                 options={{
+                  indexAxis: 'y', // This makes it a horizontal bar chart
                   scales: {
                     y: {
+                      ticks: {
+                        autoSkip: false,
+                        padding: 5,
+                        font: {
+                          size: 11
+                        }
+                      }
+                    },
+                    x: {
                       beginAtZero: true,
                       max: 1,
                       ticks: {
