@@ -23,7 +23,6 @@ const COMPANY_COLORS = [
  * @returns {string} - Hex color code
  */
 export const getCompanyColor = (companyIdOrObj) => {
-  console.log("companyIdOrObj", companyIdOrObj);
   // Check if we received a company object with a color property
   if (typeof companyIdOrObj === 'object' && companyIdOrObj !== null) {
     if (companyIdOrObj.color) {
