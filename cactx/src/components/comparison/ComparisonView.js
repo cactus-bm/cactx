@@ -21,6 +21,7 @@ import { selectScenarios } from '../../store/scenariosSlice';
 import { selectCompanies } from '../../store/companiesSlice';
 import ScenarioCompanies from '../scenarios/ScenarioCompanies';
 import ScenarioCombined from '../scenarios/ScenarioCombined';
+import ShareholderComparisonChart from '../visualizations/ShareholderComparisonChart';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -162,6 +163,9 @@ const ComparisonView = () => {
                   Comparison Results
                 </Typography>
               </Box>
+              
+              {/* Shareholder Comparison Chart */}
+              <ShareholderComparisonChart scenarios={scenarioObjects} />
               <Grid container spacing={3} sx={{ width: '100%' }}>
                 <Grid item size={{xs:12, lg:6}}>
                   <ScenarioCompanies
