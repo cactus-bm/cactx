@@ -79,8 +79,8 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
           <TableBody>
             {investors.map((investor, index) => {
               if (investor.investors.length > 1) {
-                return (<>
-                <TableRow key={`${investor.name}-${index}`} hover>
+                return (<div key={`${investor.name}-${index}`}>
+                <TableRow  hover>
                   <TableCell>{investor.name}</TableCell>
                   <TableCell/>
                   <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
@@ -100,7 +100,7 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
                   {formatPercentage(investorLine.percentage)}
                 </TableCell>
               </TableRow>))}
-            </>
+            </div>
             )}
             else {
               return (

@@ -221,7 +221,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
           calculateOtherPercentage(scenario1Percentages),
           calculateOtherPercentage(scenario2Percentages)
         ],
-        backgroundColor: '#999999',
+        backgroundColor: '#999999', // Always use gray for 'Other' category
         barPercentage: 0.8
       });
     }
@@ -287,41 +287,43 @@ const ShareholderComparisonChart = ({ scenarios }) => {
 
       
       {chartData && (
-        <Box sx={{ height: 350 }}>
-          {chartData && (
-            <Bar
-              data={chartData}
-              options={{
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    max: 1,
-                    ticks: {
-                      callback: (value) => formatPercentage(value)
-                    }
-                  }
-                },
-                plugins: {
-                  tooltip: {
-                    callbacks: {
-                      label: (context) => {
-                        return `${context.dataset.label}: ${formatPercentage(context.parsed.y)}`;
+        <Box>
+          <Box sx={{ height: 350, mb: 3 }}>
+            {chartData && (
+              <Bar
+                data={chartData}
+                options={{
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      max: 1,
+                      ticks: {
+                        callback: (value) => formatPercentage(value)
                       }
                     }
                   },
-                  legend: {
-                    position: 'top',
-                    labels: {
-                      boxWidth: 15
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: (context) => {
+                          return `${context.dataset.label}: ${formatPercentage(context.parsed.y)}`;
+                        }
+                      }
+                    },
+                    legend: {
+                      position: 'top',
+                      labels: {
+                        boxWidth: 15
+                      }
                     }
-                  }
-                },
-                responsive: true,
-                maintainAspectRatio: false
-              }}
-            />
-          )}
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false
+                }}
+              />
+            )}
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', pb: 2 }}>
             Equity distribution comparison between scenarios
           </Typography>
         </Box>
