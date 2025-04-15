@@ -361,7 +361,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
         
         <Grid container spacing={1}>
           {allInvestors.length > 0 ? (
-            allInvestors.map(investor => (
+            allInvestors.sort().map(investor => (
               <Grid item xs={4} key={investor}>
                 <FormControlLabel
                   control={
