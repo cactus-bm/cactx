@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MM Logo Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .logo-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .logo {
+      width: 512px;
+      height: 512px;
+      background-color: #1976d2;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    
+    .logo-text {
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 250px;
+      font-weight: bold;
+      line-height: 0.85;
+    }
+    
+    .buttons {
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 4px;
+    }
+    
+    h1, h2 {
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <h1>MM Logo Generator</h1>
+  <p>Below is your custom logo for MergerModeling. Follow the instructions to save and use it.</p>
+  
+  <div class="logo-container">
+    <div id="logo" class="logo">
+      <div class="logo-text">MM</div>
+    </div>
+  </div>
+  
+  <div class="buttons">
+    <button onclick="takeScreenshot()">Download Logo (PNG)</button>
+  </div>
+  
+  <div class="instructions">
+    <h2>Instructions to replace the default React logo:</h2>
+    <ol>
+      <li>Click the "Download Logo" button above to save the logo as a PNG file</li>
+      <li>Resize the downloaded image to create the following files:
+        <ul>
+          <li>favicon.ico (32x32)</li>
+          <li>logo192.png (192x192)</li>
+          <li>logo512.png (512x512)</li>
+        </ul>
+      </li>
+      <li>Replace the corresponding files in your project's <code>/public</code> folder</li>
+      <li>Rebuild and redeploy your application</li>
+    </ol>
+    <p>If you have image editing software like Photoshop or a free tool like GIMP, you can use it to resize and save the logo in the required formats.</p>
+    <p>Alternatively, you can use online tools like <a href="https://www.favicon-generator.org/" target="_blank">favicon-generator.org</a> to convert your PNG into all the required sizes and formats.</p>
+  </div>
+  
+  <script>
+    // Simple function to take a screenshot of the logo
+    function takeScreenshot() {
+      const logoElement = document.getElementById('logo');
+      
+      // Create a canvas element
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      
+      // Draw the logo on the canvas
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#1976d2';
+      ctx.beginPath();
+      ctx.arc(256, 256, 256, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Draw the text
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 250px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('MM', 256, 256);
+      
+      // Convert canvas to image and trigger download
+      const link = document.createElement('a');
+      link.download = 'mm-logo.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
