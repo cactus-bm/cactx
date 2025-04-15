@@ -103,8 +103,107 @@ const ShareholderComparisonChart = ({ scenarios }) => {
     processScenario(scenarios[0]);
     processScenario(scenarios[1]);
     
-    // Convert to array and sort alphabetically
-    const investorsArray = Array.from(uniqueInvestors).sort();
+    // Get investor percentages for both scenarios
+    const scenario1Percentages = {};
+    const scenario2Percentages = {};
+    
+    try {
+      // Process scenario 1
+      const ownership1 = scenarios[0].ownership || {};
+      const valuation1 = scenarios[0].results?.valuation || {};
+      const scenarioCompanies1 = companies.filter(company => 
+        ownership1[company.id] && ownership1[company.id] > 0
+      );
+      
+      // Calculate percentages for scenario 1
+      let combinedInvestors1 = [];
+      scenarioCompanies1.forEach(company => {
+        if (!company || !company.investors) return;
+        
+        try {
+          const companyValuation = valuation1[company.id]?.valuation || 10000000;
+          const investors = calculateSplit(company.investors, companyValuation);
+          
+          if (Array.isArray(investors)) {
+            const adjustedInvestors = investors.map(investor => ({
+              ...investor,
+              percentage: investor.percentage * ownership1[company.id] / 100
+            }));
+            
+            combinedInvestors1 = [...combinedInvestors1, ...adjustedInvestors];
+          }
+        } catch (error) {
+          console.error('Error processing investor percentages:', error);
+        }
+      });
+      
+      // Sum percentages by investor name
+      combinedInvestors1.forEach(investor => {
+        if (investor && investor.name) {
+          if (scenario1Percentages[investor.name]) {
+            scenario1Percentages[investor.name] += investor.percentage || 0;
+          } else {
+            scenario1Percentages[investor.name] = investor.percentage || 0;
+          }
+        }
+      });
+      
+      // Process scenario 2
+      const ownership2 = scenarios[1].ownership || {};
+      const valuation2 = scenarios[1].results?.valuation || {};
+      const scenarioCompanies2 = companies.filter(company => 
+        ownership2[company.id] && ownership2[company.id] > 0
+      );
+      
+      // Calculate percentages for scenario 2
+      let combinedInvestors2 = [];
+      scenarioCompanies2.forEach(company => {
+        if (!company || !company.investors) return;
+        
+        try {
+          const companyValuation = valuation2[company.id]?.valuation || 10000000;
+          const investors = calculateSplit(company.investors, companyValuation);
+          
+          if (Array.isArray(investors)) {
+            const adjustedInvestors = investors.map(investor => ({
+              ...investor,
+              percentage: investor.percentage * ownership2[company.id] / 100
+            }));
+            
+            combinedInvestors2 = [...combinedInvestors2, ...adjustedInvestors];
+          }
+        } catch (error) {
+          console.error('Error processing investor percentages:', error);
+        }
+      });
+      
+      // Sum percentages by investor name
+      combinedInvestors2.forEach(investor => {
+        if (investor && investor.name) {
+          if (scenario2Percentages[investor.name]) {
+            scenario2Percentages[investor.name] += investor.percentage || 0;
+          } else {
+            scenario2Percentages[investor.name] = investor.percentage || 0;
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error calculating percentages for sorting:', error);
+    }
+    
+    // Get max percentage for each investor across both scenarios
+    const maxPercentages = {};
+    Array.from(uniqueInvestors).forEach(investor => {
+      const percent1 = scenario1Percentages[investor] || 0;
+      const percent2 = scenario2Percentages[investor] || 0;
+      maxPercentages[investor] = Math.max(percent1, percent2);
+    });
+    
+    // Sort investors by maximum percentage (descending)
+    const investorsArray = Array.from(uniqueInvestors).sort((a, b) => {
+      return maxPercentages[b] - maxPercentages[a];
+    });
+    
     setAllInvestors(investorsArray);
     
     // Initially select the top 5 investors (or all if less than 5)
