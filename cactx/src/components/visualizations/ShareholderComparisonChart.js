@@ -415,7 +415,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
                     tooltip: {
                       callbacks: {
                         label: (context) => {
-                          return `${context.dataset.label}: ${formatPercentage(context.parsed.y)}`;
+                          return `${context.dataset.label}: ${formatPercentage(context.parsed.x)}`;
                         }
                       }
                     },
