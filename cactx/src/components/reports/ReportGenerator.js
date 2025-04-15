@@ -202,7 +202,7 @@ const ReportGenerator = () => {
             </Grid>
           </Paper>
           
-          {selectedScenario && scenarioObject && reportTitle && (
+          {selectedScenario && scenarioObject && (
             <div ref={reportRef}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <DescriptionIcon sx={{ mr: 2 }} />
@@ -231,7 +231,7 @@ const ReportGenerator = () => {
                   </IconButton>
                 </Box>
                 <Typography variant="h4" align="center" gutterBottom>
-                  {reportTitle}
+                  {reportTitle || scenarioObject.basicInfo.name}
                 </Typography>
                 <Typography variant="subtitle1" align="center" gutterBottom>
                   Generated on {new Date().toLocaleDateString()}
