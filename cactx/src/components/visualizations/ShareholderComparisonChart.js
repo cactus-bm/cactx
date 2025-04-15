@@ -9,9 +9,28 @@ import {
   Grid
 } from '@mui/material';
 import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
 import { getCompanyColor } from '../../utils/colorUtils';
 import { calculateSplit } from '../../models/equityCalculations';
 import { useSelector } from 'react-redux';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 // Format percentage for display
 const formatPercentage = (value) => {
@@ -79,7 +98,6 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       }
     };
 
-    console.log("allInvestors", allInvestors)
     
     // Process both scenarios
     processScenario(scenarios[0]);
@@ -91,8 +109,13 @@ const ShareholderComparisonChart = ({ scenarios }) => {
     
     // Initially select the top 5 investors (or all if less than 5)
     setSelectedInvestors(investorsArray.slice(0, Math.min(5, investorsArray.length)));
-  }, [scenarios]);
+  }, [scenarios, companies]);
   
+  // Reset chart data when scenarios change to avoid canvas reuse issues
+  useEffect(() => {
+    setChartData(null);
+  }, [scenarios]);
+
   // Generate chart data when selected investors change
   useEffect(() => {
     if (!scenarios || !scenarios[0] || !scenarios[1] || selectedInvestors.length === 0) {
@@ -264,33 +287,40 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       </Box>
       
       {chartData && (
-        <Box>
-          <Bar
-            data={chartData}
-            options={{
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  max: 1,
-                  ticks: {
-                    callback: (value) => formatPercentage(value)
-                  }
-                }
-              },
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: (context) => {
-                      return `${context.dataset.label}: ${formatPercentage(context.parsed.y)}`;
+        <Box sx={{ height: 350 }}>
+          {chartData && (
+            <Bar
+              data={chartData}
+              options={{
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    max: 1,
+                    ticks: {
+                      callback: (value) => formatPercentage(value)
                     }
                   }
-                }
-              },
-              responsive: true,
-              maintainAspectRatio: false
-            }}
-            height={300}
-          />
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        return `${context.dataset.label}: ${formatPercentage(context.parsed.y)}`;
+                      }
+                    }
+                  },
+                  legend: {
+                    position: 'top',
+                    labels: {
+                      boxWidth: 15
+                    }
+                  }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+              }}
+            />
+          )}
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
             Equity distribution comparison between scenarios
           </Typography>
