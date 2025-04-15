@@ -133,7 +133,6 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       const result = {};
       try {
         // First check if we have relevant data
-        const companies = scenario.companies || [];
         const ownership = scenario.ownership || {};
         const valuation = scenario.results?.valuation || {};
         
@@ -232,7 +231,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       labels,
       datasets: selectedDatasets
     });
-  }, [scenarios, selectedInvestors, allInvestors]);
+  }, [scenarios, selectedInvestors, allInvestors, companies]);
   
   // Handle investor checkbox toggle
   const handleInvestorToggle = (investor) => {
@@ -249,7 +248,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
   if (!scenarios || !scenarios[0] || !scenarios[1]) {
     return null;
   }
-  
+
   return (
     <Paper sx={{ p: 3, mb: 4 }}>
       <Typography variant="h6" gutterBottom>
@@ -285,6 +284,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
           )}
         </Grid>
       </Box>
+
       
       {chartData && (
         <Box sx={{ height: 350 }}>

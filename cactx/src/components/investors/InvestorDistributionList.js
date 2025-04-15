@@ -103,7 +103,7 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
             </>
             )}
             else {
-              return (<>
+              return (
               <TableRow key={`${investor.name}-${index}`} hover>
                 <TableCell>{investor.name}</TableCell>
                 <TableCell>
@@ -116,7 +116,7 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
                 </TableCell>
                 <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
               </TableRow>
-            </>);
+            );
             }
           })}
 
