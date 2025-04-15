@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { 
   Box, 
@@ -20,7 +20,9 @@ import {
   ListItemIcon,
   Checkbox,
   Alert,
-  Snackbar
+  Snackbar,
+  FormGroup,
+  FormControlLabel
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -37,6 +39,8 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import MDEditor from '@uiw/react-md-editor';
+import { getCompanyColor } from '../../utils/colorUtils';
+import { calculateSplit } from '../../models/equityCalculations';
 
 // Format currency values
 const formatCurrency = (value) => {
@@ -45,6 +49,12 @@ const formatCurrency = (value) => {
     currency: 'USD',
     maximumFractionDigits: 0
   }).format(value);
+};
+
+// Format percentage values
+const formatPercentage = (value) => {
+  if (value === null || value === undefined) return '0%';
+  return `${(value * 100).toFixed(1)}%`;
 };
 
 const ReportGenerator = () => {
@@ -62,11 +72,17 @@ const ReportGenerator = () => {
     projections: true,
     companies: true,
     combined: true,
-    recommendations: false
+    recommendations: false,
+    shareholderComparison: false
   });
   const [recommendations, setRecommendations] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  
+  // State for shareholder comparison chart
+  const [allInvestors, setAllInvestors] = useState([]);
+  const [selectedInvestors, setSelectedInvestors] = useState([]);
+  const [shareholderChartData, setShareholderChartData] = useState(null);
   
   const reportRef = useRef(null);
   
@@ -80,6 +96,152 @@ const ReportGenerator = () => {
       [section]: !selectedSections[section]
     });
   };
+  
+  // Handle investor checkbox toggle
+  const handleInvestorToggle = (investor) => {
+    setSelectedInvestors(prev => {
+      if (prev.includes(investor)) {
+        return prev.filter(i => i !== investor);
+      } else {
+        return [...prev, investor];
+      }
+    });
+  };
+  
+  // Load all investors whenever selected scenario changes
+  useEffect(() => {
+    if (!scenarioObject) {
+      setAllInvestors([]);
+      setSelectedInvestors([]);
+      return;
+    }
+    
+    try {
+      // Get all companies in this scenario
+      const scenarioCompanies = companies.filter(company => 
+        scenarioObject.ownership && scenarioObject.ownership[company.id] > 0
+      );
+      
+      // Collect all investors
+      const uniqueInvestors = new Set();
+      
+      scenarioCompanies.forEach(company => {
+        if (!company || !company.investors) return;
+        
+        try {
+          const companyValuation = scenarioObject.valuation?.[company.id]?.valuation || 10000000;
+          const investors = calculateSplit(company.investors, companyValuation);
+          
+          if (Array.isArray(investors)) {
+            investors.forEach(investor => {
+              if (investor && investor.name) {
+                uniqueInvestors.add(investor.name);
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error processing investors:', error);
+        }
+      });
+      
+      // Convert to array and sort
+      const investorsArray = Array.from(uniqueInvestors).sort();
+      setAllInvestors(investorsArray);
+      
+      // Initially select the top 5 investors (or all if less than 5)
+      setSelectedInvestors(investorsArray.slice(0, Math.min(5, investorsArray.length)));
+    } catch (error) {
+      console.error('Error loading investors:', error);
+      setAllInvestors([]);
+      setSelectedInvestors([]);
+    }
+  }, [scenarioObject, companies]);
+  
+  // Generate chart data when selected investors change
+  useEffect(() => {
+    if (!scenarioObject || selectedInvestors.length === 0) {
+      setShareholderChartData(null);
+      return;
+    }
+    
+    try {
+      // Get scenario companies
+      const scenarioCompanies = companies.filter(company => 
+        scenarioObject.ownership && scenarioObject.ownership[company.id] > 0
+      );
+      
+      // Calculate investor percentages
+      const investorPercentages = {};
+      
+      // Process all companies in the scenario
+      scenarioCompanies.forEach(company => {
+        if (!company || !company.investors) return;
+        
+        try {
+          const companyValuation = scenarioObject.valuation?.[company.id]?.valuation || 10000000;
+          const investors = calculateSplit(company.investors, companyValuation);
+          
+          if (Array.isArray(investors)) {
+            // Adjust percentages based on company ownership in scenario
+            const adjustedInvestors = investors.map(investor => ({
+              ...investor,
+              percentage: investor.percentage * scenarioObject.ownership[company.id] / 100
+            }));
+            
+            // Sum percentages by investor name
+            adjustedInvestors.forEach(investor => {
+              if (investor && investor.name) {
+                if (investorPercentages[investor.name]) {
+                  investorPercentages[investor.name] += investor.percentage || 0;
+                } else {
+                  investorPercentages[investor.name] = investor.percentage || 0;
+                }
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error processing investor percentages:', error);
+        }
+      });
+      
+      // Prepare chart data for selected investors
+      const chartDatasets = selectedInvestors.map(investor => ({
+        label: investor,
+        data: [investorPercentages[investor] || 0],
+        backgroundColor: getCompanyColor(investor)
+      }));
+      
+      // Calculate "Other" category if needed
+      if (allInvestors.length > selectedInvestors.length) {
+        let otherPercentage = 0;
+        
+        // Sum percentages for all non-selected investors
+        allInvestors.forEach(investor => {
+          if (!selectedInvestors.includes(investor)) {
+            otherPercentage += investorPercentages[investor] || 0;
+          }
+        });
+        
+        // Add "Other" dataset if there's any percentage to show
+        if (otherPercentage > 0) {
+          chartDatasets.push({
+            label: 'Other',
+            data: [otherPercentage],
+            backgroundColor: '#999999' // Gray for 'Other' category
+          });
+        }
+      }
+      
+      // Set chart data for use in the report
+      setShareholderChartData({
+        labels: [scenarioObject.basicInfo.name],
+        datasets: chartDatasets
+      });
+    } catch (error) {
+      console.error('Error generating chart data:', error);
+      setShareholderChartData(null);
+    }
+  }, [scenarioObject, selectedInvestors, allInvestors, companies]);
   
   return (
     <Box>
@@ -175,6 +337,16 @@ const ReportGenerator = () => {
                     </ListItemIcon>
                     <ListItemText primary="Recommendations" />
                   </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={selectedSections.shareholderComparison}
+                        onChange={() => handleSectionToggle('shareholderComparison')}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary="Shareholder Comparison Chart" />
+                  </ListItem>
                 </List>
               </Grid>
               
@@ -197,6 +369,36 @@ const ReportGenerator = () => {
                   </Typography>
                 </Grid>
               )}
+              
+              {selectedSections.shareholderComparison && selectedScenario && (
+                <Grid item size={{xs:12}}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Select Shareholders to Compare
+                  </Typography>
+                  <FormGroup sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {allInvestors.sort().map(investor => (
+                      <FormControlLabel
+                        key={investor}
+                        control={
+                          <Checkbox 
+                            checked={selectedInvestors.includes(investor)}
+                            onChange={() => handleInvestorToggle(investor)}
+                            size="small"
+                          />
+                        }
+                        label={investor}
+                        sx={{ width: '33%', minWidth: '200px' }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {allInvestors.length === 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                      No shareholders found in this scenario.
+                    </Typography>
+                  )}
+                </Grid>
+              )}
+              
               <Grid item size={{xs:12}}>
               </Grid>
             </Grid>
@@ -237,6 +439,55 @@ const ReportGenerator = () => {
                   Generated on {new Date().toLocaleDateString()}
                 </Typography>
                 <Divider sx={{ my: 3 }} />
+                
+                {selectedSections.shareholderComparison && shareholderChartData && shareholderChartData.datasets.length > 0 && (
+                  <>
+                    <Typography variant="h5" gutterBottom>
+                      Shareholder Distribution
+                    </Typography>
+                    <Box sx={{ mb: 4, height: 300 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <Box sx={{ flex: 1, display: 'flex' }}>
+                          {/* Y-axis labels */}
+                          <Box sx={{ width: 150, pr: 2, textAlign: 'right', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pt: 2, pb: 2 }}>
+                            {shareholderChartData.datasets.map((dataset, index) => (
+                              <Typography key={index} variant="body2" noWrap>
+                                {dataset.label}
+                              </Typography>
+                            ))}
+                          </Box>
+                          
+                          {/* Bars */}
+                          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pt: 2, pb: 2 }}>
+                            {shareholderChartData.datasets.map((dataset, index) => (
+                              <Box key={index} sx={{ display: 'flex', alignItems: 'center', height: 24 }}>
+                                <Box 
+                                  sx={{
+                                    width: `${Math.max(dataset.data[0] * 100, 0.5)}%`,
+                                    backgroundColor: dataset.backgroundColor,
+                                    height: '20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-end',
+                                    pr: 1,
+                                    borderRadius: '2px',
+                                    color: 'white',
+                                    minWidth: '30px',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  {formatPercentage(dataset.data[0])}
+                                </Box>
+                              </Box>
+                            ))}
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Divider sx={{ mb: 3 }} />
+                  </>
+                )}
                 
                 {selectedSections.basicInfo && (
                   <>
