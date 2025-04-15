@@ -11,6 +11,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { getCompanyColor } from '../../utils/colorUtils';
 import { calculateSplit } from '../../models/equityCalculations';
+import { useSelector } from 'react-redux';
 
 // Format percentage for display
 const formatPercentage = (value) => {
@@ -21,6 +22,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
   const [selectedInvestors, setSelectedInvestors] = useState([]);
   const [allInvestors, setAllInvestors] = useState([]);
   const [chartData, setChartData] = useState(null);
+  const companies = useSelector(state => state.companies.companies);
   
   // Extract all unique investors from both scenarios
   useEffect(() => {
@@ -35,7 +37,6 @@ const ShareholderComparisonChart = ({ scenarios }) => {
       
       try {
         // First check if we have relevant data
-        const companies = scenario.companies || [];
         const ownership = scenario.ownership || {};
         const valuation = scenario.results?.valuation || {};
         
@@ -43,7 +44,7 @@ const ShareholderComparisonChart = ({ scenarios }) => {
         const scenarioCompanies = companies.filter(company => 
           ownership[company.id] && ownership[company.id] > 0
         );
-        
+
         // Process each company with ownership
         scenarioCompanies.forEach(company => {
           if (!company || !company.investors) return;
@@ -77,6 +78,8 @@ const ShareholderComparisonChart = ({ scenarios }) => {
         console.error('Error processing scenario:', error);
       }
     };
+
+    console.log("allInvestors", allInvestors)
     
     // Process both scenarios
     processScenario(scenarios[0]);
