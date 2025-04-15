@@ -144,11 +144,47 @@ const ReportGenerator = () => {
         }
       });
       
-      // Convert to array and sort
-      const investorsArray = Array.from(uniqueInvestors).sort();
+      // Calculate percentages for each investor
+      const investorPercentages = {};
+      
+      // Calculate actual percentages for each investor to find the largest ones
+      scenarioCompanies.forEach(company => {
+        if (!company || !company.investors) return;
+        
+        try {
+          const companyValuation = scenarioObject.valuation?.[company.id]?.valuation || 10000000;
+          const investors = calculateSplit(company.investors, companyValuation);
+          
+          if (Array.isArray(investors)) {
+            // Adjust percentages based on company ownership in scenario
+            const adjustedInvestors = investors.map(investor => ({
+              ...investor,
+              percentage: investor.percentage * scenarioObject.ownership[company.id] / 100
+            }));
+            
+            // Sum percentages by investor name
+            adjustedInvestors.forEach(investor => {
+              if (investor && investor.name) {
+                if (investorPercentages[investor.name]) {
+                  investorPercentages[investor.name] += investor.percentage || 0;
+                } else {
+                  investorPercentages[investor.name] = investor.percentage || 0;
+                }
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Error calculating investor percentages:', error);
+        }
+      });
+      
+      // Convert to array and sort by percentage (descending)
+      const investorsArray = Array.from(uniqueInvestors)
+        .sort((a, b) => (investorPercentages[b] || 0) - (investorPercentages[a] || 0));
+      
       setAllInvestors(investorsArray);
       
-      // Initially select the top 5 investors (or all if less than 5)
+      // Initially select the top 5 investors by percentage (or all if less than 5)
       setSelectedInvestors(investorsArray.slice(0, Math.min(5, investorsArray.length)));
     } catch (error) {
       console.error('Error loading investors:', error);
