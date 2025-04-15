@@ -79,8 +79,8 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
           <TableBody>
             {investors.map((investor, index) => {
               if (investor.investors.length > 1) {
-                return (<div key={`${investor.name}-${index}`}>
-                <TableRow  hover>
+                return (<React.Fragment key={`${investor.name}-${index}`}>
+                <TableRow  key={`${investor.name}-${index}-tableRow`} hover>
                   <TableCell>{investor.name}</TableCell>
                   <TableCell/>
                   <TableCell align="right" sx={{ fontWeight: 'bold' }}>{formatPercentage(investor.percentage)}</TableCell>
@@ -100,7 +100,7 @@ export const InvestorList = ({investors, valuation, title = "Investor Distributi
                   {formatPercentage(investorLine.percentage)}
                 </TableCell>
               </TableRow>))}
-            </div>
+            </React.Fragment>
             )}
             else {
               return (

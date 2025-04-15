@@ -13,7 +13,20 @@ const COMPANY_COLORS = [
   '#00bcd4', // Cyan
   '#ff5722', // Deep Orange
   '#8bc34a', // Light Green
-  '#673ab7'  // Deep Purple
+  '#673ab7',  // Deep Purple
+  '#e91e63', // Pink
+  '#009688', // Teal
+  '#cddc39', // Lime
+  '#795548', // Brown
+  '#607d8b', // Blue Grey
+  '#ffeb3b', // Yellow
+  '#ff4081', // Pink Accent
+  '#7c4dff', // Deep Purple Accent
+  '#00e5ff', // Cyan Accent
+  '#76ff03', // Light Green Accent
+  '#ff3d00', // Deep Orange Accent
+  '#1de9b6'  // Teal Accent
+  
 ];
 
 /**
