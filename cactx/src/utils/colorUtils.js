@@ -13,7 +13,7 @@ const COMPANY_COLORS = [
   '#00bcd4', // Cyan
   '#ff5722', // Deep Orange
   '#8bc34a', // Light Green
-  '#673ab7',  // Deep Purple
+  '#673ab7', // Deep Purple
   '#cddc39', // Lime
 ];
 
