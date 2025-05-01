@@ -56,12 +56,12 @@ const newScenario = () => ({
     },
     createdAt: new Date().toISOString(),
     ownership: {
-      catx: 20,
-      cactus: 80,
+      company_a: 80,
+      company_b: 20,
     },
     valuationAssumptions: {
-      catx: 0,
-      cactus: 25e6
+      company_b: 0,
+      company_a: 25e6
     },
     results: null
   })
