@@ -55,18 +55,10 @@ const newScenario = () => ({
       description: '',
     },
     createdAt: new Date().toISOString(),
-    ownership: {
-      company_a: 80,
-      company_b: 20,
-    },
-    valuationAssumptions: {
-      company_b: 0,
-      company_a: 25e6
-    },
+    ownership: { },
+    valuationAssumptions: { },
     results: null
   })
-
-const initialState = newScenario();
 
 
 const ScenarioBuilder = () => {
